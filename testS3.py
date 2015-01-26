@@ -22,13 +22,11 @@ print 'Upload du fichier'
 k.set_contents_from_filename('working-draft.txt')
 
 # download le fichier
-
 print 'Download du fichier'
 key_we_know_is_there = b.get_key('testText10k_01', validate=False)
-res = key_we_know_is_there.get_contents_to_filename(key_we_know_is_there.testText10k_01)
+res = key_we_know_is_there.get_contents_to_filename('testText10k_01.txt')
 
 
 # delete le bucket
-
-print 'Suppression du bucket'
-conn.delete_bucket('mdicbucket2015')
+print 'Suppression du fichier'
+b.delete_key(k)
