@@ -4,6 +4,11 @@ import httplib2
 import apiclient.discovery
 import apiclient.http
 import oauth2client.client
+import provider
+
+
+p = provider.Provider('googledrive')
+
 
 # OAuth 2.0 scope that will be authorized.
 # Check https://developers.google.com/drive/scopes for all available scopes.
@@ -13,12 +18,12 @@ OAUTH2_SCOPE = 'https://www.googleapis.com/auth/drive'
 CLIENT_SECRETS = 'client_secrets.json'
 
 # Path to the file to upload.
-FILENAME = 'document.txt'
+FILENAME = 'working-draft.txt'
 
 # Metadata about the file.
 MIMETYPE = 'text/plain'
 TITLE = 'My New Text Document'
-DESCRIPTION = 'A shiny new text document about hello world.'
+DESCRIPTION = 'A shiny new text document about lorem ipsum.'
 
 # Perform OAuth2.0 authorization flow.
 flow = oauth2client.client.flow_from_clientsecrets(CLIENT_SECRETS, OAUTH2_SCOPE)
