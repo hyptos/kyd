@@ -68,7 +68,7 @@ if __name__ == '__main__':
     client = init()
 
     FILEPATH = 'working-draft.txt'
-    FILENAME = '/testText10k_01.txt'
+    FILENAME = 'testText10k_01.txt'
 
     nowUpload = datetime.datetime.now()
     upload_file(client, FILEPATH, FILENAME)
@@ -77,7 +77,7 @@ if __name__ == '__main__':
     print "Upload time for 10k file " + diff.__str__()
 
     nowDownload = datetime.datetime.now()
-    download_file(client, FILENAME, FILENAME)
+    download_file(client, FILENAME, '/' + FILENAME)
     afterDownload = datetime.datetime.now()
     diff = afterDownload - nowDownload
     print "Download time for 10k file " + diff.__str__()
