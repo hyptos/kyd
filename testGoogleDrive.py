@@ -44,7 +44,6 @@ def init():
 
 
 def upload_file(service, filePath, fileName, fileType, fileDescription):
-
     # Metadata about the file.
     MIMETYPE = 'text/plain'
     TITLE = 'My New Text Document'
@@ -55,15 +54,15 @@ def upload_file(service, filePath, fileName, fileType, fileDescription):
     # Insert a file. Files are comprised of contents and metadata.
     # MediaFileUpload abstracts uploading file contents from a file on disk.
     media_body = apiclient.http.MediaFileUpload(
-    filePath,
-    mimetype=fileType,
-    resumable=True
+        filePath,
+        mimetype=fileType,
+        resumable=True
     )
 
     # The body contains the metadata for the file.
     body = {
-    'title': fileName,
-    'description': fileDescription,
+        'title': fileName,
+        'description': fileDescription,
     }
 
     new_file = service.files().insert(body=body, media_body=media_body).execute()
@@ -111,8 +110,7 @@ def delete_file(service, file_id):
         print 'An error occurred: %s' % error
 
 
-def test_all():
-
+if __name__ == '__main__':
     drive_service = init()
 
     DESCRIPTION = 'A shiny new text document about lorem ipsum.'
@@ -122,5 +120,3 @@ def test_all():
     download_file(drive_service, new_file)
 
     delete_file(drive_service, new_file['id'])
-
-test_all()

@@ -6,11 +6,12 @@ from boto.s3.connection import S3Connection, Location
 __author__ = 'antoine'
 
 
-def deleteFile(bucket,cle):
+def deleteFile(bucket, cle):
     print 'Delete du bucket'
     bucket.delete_key(cle)
 
-def uploadFile(nomFichier,nomCle,nomBucket):
+
+def uploadFile(nomFichier, nomCle, nomBucket):
     print 'Upload du fichier'
     b = getConnexion().get_bucket(nomBucket)
     k = getKey(b)
@@ -19,20 +20,23 @@ def uploadFile(nomFichier,nomCle,nomBucket):
     print 'Fin upload'
 
 
-def downloadFile(bucket,cle,nouveauNomFichier):
+def downloadFile(bucket, cle, nouveauNomFichier):
     print 'Download du fichier'
     key_we_know_is_there = bucket.get_key(cle, validate=False)
     res = key_we_know_is_there.get_contents_to_filename(nouveauNomFichier)
     print 'Fin download'
 
+
 def getConnexion():
     p = provider.Provider('amazon')
     return S3Connection(p.app_key, p.app_secret)
 
+
 def getKey(cle):
     return Key(cle)
 
-def creationBucket(nomBucket,locationGeo):
+
+def creationBucket(nomBucket, locationGeo):
     b = getConnexion()
     return b.create_bucket(nomBucket, location=locationGeo)
 
@@ -43,6 +47,6 @@ if __name__ == '__main__':
     cleBucket = 'testFichier01'
     nomFichier = 'working-draft.txt'
     # b = creationBucket(nomBucket,Location.EU)
-    uploadFile(nomFichier,cleBucket,nomBucket)
-    downloadFile(getConnexion().get_bucket(nomBucket),cleBucket,nomFichier)
-    deleteFile(getConnexion().get_bucket(nomBucket),cleBucket)
+    uploadFile(nomFichier, cleBucket, nomBucket)
+    downloadFile(getConnexion().get_bucket(nomBucket), cleBucket, nomFichier)
+    deleteFile(getConnexion().get_bucket(nomBucket), cleBucket)
