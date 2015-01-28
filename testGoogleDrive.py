@@ -10,17 +10,20 @@ from apiclient import errors
 
 
 def init():
+    """Init the connexion to Google Drive.
+
+    A credentials file is used to store the token and to renew it.
+
+    Returns:
+        The drive service.
+    """
+
     p = provider.Provider('googledrive')
 
     # OAuth 2.0 scope that will be authorized.
-    # Check https://developers.google.com/drive/scopes for all available scopes.
     OAUTH2_SCOPE = 'https://www.googleapis.com/auth/drive'
-
-    # Location of the client secrets.
-    CLIENT_SECRETS = 'client_secrets.json'
-
-    # Path to the crendentials
     CRED_FILENAME = 'credentials'
+
     ### For storing token
     storage = Storage(CRED_FILENAME)
     if not storage.get():
@@ -30,13 +33,11 @@ def init():
         print 'Go to the following link in your browser: ' + authorize_url
         code = raw_input('Enter verification code: ').strip()
         credentials = flow.step2_exchange(code)
-        ### Storing access token and a refresh token in CRED_FILENAME
         storage.put(credentials)
     else:
-        ### Getting access_token,expires_in,token_type,Refresh_toke info from CRED_FILENAME to 'credentials'
+        # Getting access_token,expires_in,token_type,Refresh_toke info from CRED_FILENAME to 'credentials'
         credentials = storage.get()
 
-    # Create an authorized Drive API client.
     http = httplib2.Http()
     credentials.authorize(http)
     drive_service = build('drive', 'v2', http=http)
@@ -44,22 +45,28 @@ def init():
 
 
 def upload_file(service, filePath, fileName, fileType, fileDescription):
-    # Metadata about the file.
+    """Upload a file's content.
+
+    Args:
+        service: Drive API service instance.
+        filePath : Path to the file you want to upload.
+        fileName : Name of the new file in the drive.
+        fileType : Type of the file (text, ...)
+        fileDescription : A short text to describe the file.
+
+    Returns:
+        File uploaded.
+    """
+
     MIMETYPE = 'text/plain'
     TITLE = 'My New Text Document'
     DESCRIPTION = 'A shiny new text document about lorem ipsum.'
 
-
-
-    # Insert a file. Files are comprised of contents and metadata.
-    # MediaFileUpload abstracts uploading file contents from a file on disk.
     media_body = apiclient.http.MediaFileUpload(
         filePath,
         mimetype=fileType,
         resumable=True
     )
-
-    # The body contains the metadata for the file.
     body = {
         'title': fileName,
         'description': fileDescription,
@@ -74,11 +81,11 @@ def download_file(service, drive_file):
     """Download a file's content.
 
     Args:
-    service: Drive API service instance.
-    drive_file: Drive File instance.
+        service: Drive API service instance.
+        drive_file: Drive File instance.
 
     Returns:
-    File if successful, None otherwise.
+        File if successful, None otherwise.
     """
     download_url = drive_file.get('downloadUrl')
     if download_url:
@@ -101,8 +108,8 @@ def delete_file(service, file_id):
     """Permanently delete a file, skipping the trash.
 
     Args:
-    service: Drive API service instance.
-    file_id: ID of the file to delete.
+        service: Drive API service instance.
+        file_id: ID of the file to delete.
     """
     try:
         service.files().delete(fileId=file_id).execute()
