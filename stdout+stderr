@@ -1,0 +1,55 @@
+[33m2015-01-29 14:32:06,480 [m[35mINFO:[m dup stdout / stderr to ./stdout+stderr and ./stdout+stderr
+[33m2015-01-29 14:32:06,480 [m[35mINFO:[m command line arguments: ['dropbox_engine.py', '-ML', '-c', '.']
+[33m2015-01-29 14:32:06,481 [m[35mINFO:[m command line: dropbox_engine.py -ML -c .
+[33m2015-01-29 14:32:06,481 [m[35mINFO:[m run in directory .
+Traceback (most recent call last):
+  File "dropbox_engine.py", line 125, in <module>
+    e.start()
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/execo_engine/engine.py", line 262, in start
+    run_meth_on_engine_ancestors(self, "run")
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/execo_engine/engine.py", line 76, in run_meth_on_engine_ancestors
+    meth(instance)
+  File "dropbox_engine.py", line 81, in run
+    p = provider('dropbox')
+TypeError: 'module' object is not callable
+[33m2015-01-29 14:33:06,352 [m[35mINFO:[m dup stdout / stderr to ./stdout+stderr and ./stdout+stderr
+[33m2015-01-29 14:33:06,352 [m[35mINFO:[m command line arguments: ['dropbox_engine.py', '-ML', '-c', '.']
+[33m2015-01-29 14:33:06,353 [m[35mINFO:[m command line: dropbox_engine.py -ML -c .
+[33m2015-01-29 14:33:06,353 [m[35mINFO:[m run in directory .
+[33m2015-01-29 14:33:06,501 [m[35mINFO:[m Treating combination {'db_if': 'sdk', 'size': 128}
+Traceback (most recent call last):
+  File "dropbox_engine.py", line 125, in <module>
+    e.start()
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/execo_engine/engine.py", line 262, in start
+    run_meth_on_engine_ancestors(self, "run")
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/execo_engine/engine.py", line 76, in run_meth_on_engine_ancestors
+    meth(instance)
+  File "dropbox_engine.py", line 111, in run
+    client.file_delete(fname)
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/dropbox/client.py", line 740, in file_delete
+    return self.rest_client.POST(url, params, headers)
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/dropbox/rest.py", line 316, in POST
+    return cls.IMPL.POST(*n, **kw)
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/dropbox/rest.py", line 254, in POST
+    post_params=params, headers=headers, raw_response=raw_response)
+  File "/home/antoine/PycharmProjects/p0907931-ter_mdic/venv/local/lib/python2.7/site-packages/dropbox/rest.py", line 227, in request
+    raise ErrorResponse(r, r.read())
+dropbox.rest.ErrorResponse: [404] u"Path '/tmp/tmphefdla' not found"
+[33m2015-01-29 14:33:52,189 [m[35mINFO:[m dup stdout / stderr to ./stdout+stderr and ./stdout+stderr
+[33m2015-01-29 14:33:52,189 [m[35mINFO:[m command line arguments: ['dropbox_engine.py', '-ML', '-c', '.']
+[33m2015-01-29 14:33:52,190 [m[35mINFO:[m command line: dropbox_engine.py -ML -c .
+[33m2015-01-29 14:33:52,190 [m[35mINFO:[m run in directory .
+[33m2015-01-29 14:33:52,291 [m[35mINFO:[m Treating combination {'db_if': 'sdk', 'size': 256}
+[33m2015-01-29 14:33:55,418 [m[35mINFO:[m Treating combination {'db_if': 'rest', 'size': 512}
+[33m2015-01-29 14:33:55,419 [m[36mWARNING:[m REST interface not implemented
+[33m2015-01-29 14:33:55,496 [m[35mINFO:[m Treating combination {'db_if': 'sdk', 'size': 512}
+[33m2015-01-29 14:33:57,307 [m[35mINFO:[m Treating combination {'db_if': 'rest', 'size': 128}
+[33m2015-01-29 14:33:57,308 [m[36mWARNING:[m REST interface not implemented
+[33m2015-01-29 14:33:57,375 [m[35mINFO:[m Treating combination {'db_if': 'rest', 'size': 256}
+[33m2015-01-29 14:33:57,376 [m[36mWARNING:[m REST interface not implemented
+[33m2015-01-29 14:33:57,452 [m[35mINFO:[m Treating combination {'db_if': 'rest', 'size': 2048}
+[33m2015-01-29 14:33:57,453 [m[36mWARNING:[m REST interface not implemented
+[33m2015-01-29 14:33:57,528 [m[35mINFO:[m Treating combination {'db_if': 'sdk', 'size': 2048}
+[33m2015-01-29 14:33:59,632 [m[35mINFO:[m Treating combination {'db_if': 'sdk', 'size': 1024}
+[33m2015-01-29 14:34:01,276 [m[35mINFO:[m Treating combination {'db_if': 'rest', 'size': 1024}
+[33m2015-01-29 14:34:01,277 [m[36mWARNING:[m REST interface not implemented

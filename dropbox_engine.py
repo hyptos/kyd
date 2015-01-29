@@ -45,7 +45,7 @@ class DroxpboxBench(Engine):
         return True
 
 
-    def getNewToken():
+    def getNewToken(self):
         """ Get a new token for a new app """
         p = provider.Provider('dropbox')
         print 'test de connexion a ' + p.provider_name
@@ -78,7 +78,7 @@ class DroxpboxBench(Engine):
 
     def run(self):
         """ """
-        p = provider('dropbox')
+        p = provider.Provider('dropbox')
         client = dropbox.client.DropboxClient(p.token)
         parameters = {'size': igeom(128, 2048, 5),
                       'db_if': ['rest', 'sdk']}
@@ -108,7 +108,7 @@ class DroxpboxBench(Engine):
                 dl_time = timer.elapsed() - up_time
 
                 # delete le fichier chez Dropbox
-                client.file_delete(fname)
+                client.file_delete(fname.split('/')[-1])
 
                 sweeper.done(comb)
             elif comb['db_if'] == 'rest':
