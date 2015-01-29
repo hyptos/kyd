@@ -86,6 +86,7 @@ class DroxpboxBench(Engine):
         sweeper = ParamSweeper(self.result_dir + "/sweeps", combs)
 
         f = open(self.result_dir + '/results.txt', 'w')
+        f.write("timer_start\t\tsize\tupload_time\tdownload_time\n")
         while len(sweeper.get_remaining()) > 0:
             comb = sweeper.get_next()
 
@@ -104,7 +105,7 @@ class DroxpboxBench(Engine):
                 self.upload_file_sdk(client, fname, fname.split('/')[-1])
                 up_time = timer.elapsed()
                 self.download_file_sdk(client, fname.split('/')[-1],
-                                       comb_dir + fname.split('/')[-1])
+                                       comb_dir + '/' + fname.split('/')[-1])
                 dl_time = timer.elapsed() - up_time
 
                 # delete le fichier chez Dropbox
@@ -116,7 +117,7 @@ class DroxpboxBench(Engine):
                 sweeper.skip(comb)
                 continue
             os.remove(fname)
-            f.write("%f %i %f %f \n" % (timer.start_date(), comb['size'],
+            f.write("%f\t%i\t%f\t%f\n" % (timer.start_date(), comb['size'],
                                         up_time, dl_time))
         f.close()
 
