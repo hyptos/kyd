@@ -49,6 +49,11 @@ class ProviderDB(Provider):
             return False
         return True
 
+    def getToken(self):
+        if not self.token:
+            self.getNewToken()
+        return dropbox.client.DropboxClient(self.token)
+
     def __init__(self):
         """Init the connexion to Dropbox.
 
@@ -56,6 +61,4 @@ class ProviderDB(Provider):
         The Dropbox client.
         """
         Provider.__init__(self,'dropbox')
-        if not self.token:
-            self.getNewToken()
-        return dropbox.client.DropboxClient(self.token)
+        self.getToken()

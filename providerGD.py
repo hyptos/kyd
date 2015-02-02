@@ -70,7 +70,7 @@ class ProviderGD(Provider):
 
 
 
-    def init(self):
+    def __init__(self):
         """Init the connexion to Google Drive.
 
         A credentials file is used to store the token and to renew it.
@@ -80,6 +80,8 @@ class ProviderGD(Provider):
         """
 
         Provider.__init__(self,'googledrive')
+
+    def getConnexion(self):
 
         # OAuth 2.0 scope that will be authorized.
         OAUTH2_SCOPE = 'https://www.googleapis.com/auth/drive'

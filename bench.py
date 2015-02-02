@@ -2,6 +2,7 @@
 
 import tempfile
 from pprint import pformat
+import datetime
 
 import os
 import dropbox
@@ -21,23 +22,23 @@ class Bench(Engine):
         super(Bench, self).__init__()
 
         self.options_parser.add_option('-s', '--size', dest='size', help='size of the test', type=int)
-        self.options_parser.add_option('-o', '--only', dest='only', type=bool, help='test only this size of the test', default=False)
+        self.options_parser.add_option('-o', '--only', dest='only', help='test only this size of the test', default=False)
         self.options_parser.add_option('-p', '--protocol', dest='protocol', choices=['sdk', 'rest', 'all'], default='all')
-        self.options_parser.add_option('-m', '--premium', dest='premium', type=bool, help='Account used is premium', default=False)
+        self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium', default=False)
         self.options_parser.add_option('-f', '--file', dest='file', metavar="FILE", help='file to test', default=False)
         self.options_parser.add_option('-t', '--transfert', dest='transfert', choices=['inter', 'upload','download','upDown'], default='upDown')
-        self.options_parser.add_option('-c', '--cloud', dest='cloud', choices=['dropbox', 'amazon', 'googledrive', 'all'], default='all')
-
+        self.options_parser.add_option('-d', '--drive', dest='drive', choices=['dropbox', 'amazon', 'googledrive', 'all'], default='all')
+        self.options,self.args = self.options_parser.parse_args()
         print 'arg de size: ' + str(self.options.size)
         print 'arg de only: ' + str(self.options.only)
         print 'arg de protocol: ' + str(self.options.protocol)
         print 'arg de transfert: ' + str(self.options.transfert)
         print 'arg de file: ' + str(self.options.file)
-        print 'arg de cloud: ' + str(self.options.cloud)
+        print 'arg de cloud: ' + str(self.options.drive)
 
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
-            #sys.exit()
+            # sys.exit()
 
         print 'You choose to do all tests with a random file of ' + str(self.options.size)
 
@@ -52,25 +53,26 @@ class Bench(Engine):
 
     def run(self):
         """ """
-        if self.options.cloud == 'amazon':
+        if self.options.drive == 'amazon':
             p = providerS3.ProviderS3()
-        elif self.options.cloud == 'dropbox':
+        elif self.options.drive == 'dropbox':
             p = providerDB.ProviderDB()
-        elif self.options.cloud == 'googledrive':
+        elif self.options.drive == 'googledrive':
             p = providerGD.ProviderGD()
 
         parameters = {'size': igeom(128, 2048, 5),
                       'if': ['rest', 'sdk']}
         combs = sweep(parameters)
-        nomBench = p.provider_name
-        sweeper = ParamSweeper(nomBench + "/sweeps", combs)
+        date = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+        pathResults = os.getcwd() + '/Results/' + p.provider_name + '/Bench' + date
+        sweeper = ParamSweeper(pathResults + "/sweeps", combs)
 
-        f = open(nomBench + '/results.txt', 'w')
+        f = open(pathResults + '/results.txt', 'w')
         while len(sweeper.get_remaining()) > 0:
             comb = sweeper.get_next()
 
             logger.info('Treating combination %s', pformat(comb))
-            comb_dir = nomBench + '/' + slugify(comb)
+            comb_dir = pathResults + '/' + slugify(comb)
             try:
                 os.mkdir(comb_dir)
             except:
@@ -93,10 +95,10 @@ class Bench(Engine):
                     p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
                 elif p.provider_name == "dropbox":
-                    client = dropbox.client.DropboxClient(p.token)
-                    self.upload_file_sdk(client, fname, fname.split('/')[-1])
+                    client = p.getToken()
+                    p.upload_file_sdk(client, fname, fname.split('/')[-1])
                     up_time = timer.elapsed()
-                    self.download_file_sdk(client, fname.split('/')[-1],
+                    p.download_file_sdk(client, fname.split('/')[-1],
                                            comb_dir + '/' + fname.split('/')[-1])
                     dl_time = timer.elapsed() - up_time
 
@@ -104,14 +106,14 @@ class Bench(Engine):
                     client.file_delete(fname.split('/')[-1])
 
                 elif p.provider_name == "googledrive":
-                    drive_service = self.init()
-                    new_file = self.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
+                    drive_service = p.getConnexion()
+                    new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
                     up_time = timer.elapsed()
-                    self.download_file_sdk(drive_service, new_file)
+                    p.download_file_sdk(drive_service, new_file)
                     dl_time = timer.elapsed() - up_time
 
                     # delete le fichier chez Dropbox
-                    self.delete_file_sdk(drive_service, new_file['id'])
+                    p.delete_file_sdk(drive_service, new_file['id'])
 
                 sweeper.done(comb)
             elif comb['if'] == 'rest':
@@ -121,6 +123,7 @@ class Bench(Engine):
             os.remove(fname)
             f.write("%f %i %f %f\n" % (timer.start_date(), comb['size'], up_time, dl_time))
         f.close()
+        os.rmdir(self.result_dir)
 
 
 if __name__ == "__main__":
