@@ -10,7 +10,7 @@ from execo_engine import Engine, sweep, ParamSweeper, igeom, slugify, logger
 import requests
 
 
-class DroxpboxBench(Engine):
+class DropboxBench(Engine):
     """  """
 
     def create_file(self, size):
@@ -83,7 +83,7 @@ class DroxpboxBench(Engine):
         parameters = {'size': igeom(128, 2048, 5),
                       'db_if': ['rest', 'sdk']}
         combs = sweep(parameters)
-        sweeper = ParamSweeper(self.result_dir + "/sweeps", combs)
+        sweeper = ParamSweeper(self.result_dir + '/sweeps', combs)
 
         f = open(self.result_dir + '/results.txt', 'w')
         f.write("timer_start\t\tsize\tupload_time\tdownload_time\n")
@@ -122,5 +122,5 @@ class DroxpboxBench(Engine):
         f.close()
 
 if __name__ == "__main__":
-    e = DroxpboxBench()
+    e = DropboxBench()
     e.start()
