@@ -1,8 +1,6 @@
 import argparse
 import sys
-import engine_as3
-import engine_dp
-import engine_gd
+import bench
 
 
 def init():
@@ -30,10 +28,10 @@ if __name__ == '__main__':
         #sys.exit()
 
     print 'You choose to do all tests with a random file of ' + str(args.size)
-    d = engine_dp.DropboxBench()
+    #d = engine_dp.DropboxBench()
     d.start()
-    a = engine_as3.S3Bench()
+    #a = bench.S3Bench()
     a.start()
-    g = engine_gd.GoogleDriveBench()
+    #g = engine_gd.GoogleDriveBench()
     g.start()
     print 'c\'est fini'
