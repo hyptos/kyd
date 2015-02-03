@@ -38,25 +38,33 @@ class Bench(Engine):
         super(Bench, self).__init__()
 
         self.options_parser.add_option('-s', '--size', dest='size', help='size of the test', type=int)
-        self.options_parser.add_option('-o', '--only', dest='only', help='test only this size of the test', default=False)
+        self.options_parser.add_option('-o', '--only', dest='only', help='test only this size of the test', action='store_true', default=False)
         self.options_parser.add_option('-p', '--protocol', dest='protocol', choices=['sdk', 'rest', 'all'], default='all')
-        self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium', default=False)
+        self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium',action='store_true', default=False)
         self.options_parser.add_option('-f', '--file', dest='file', metavar="FILE", help='file to test', default=False)
         self.options_parser.add_option('-t', '--transfert', dest='transfert', choices=['inter', 'upload','download','upDown'], default='upDown')
         self.options_parser.add_option('-d', '--drive', callback=cb, action='callback', dest='drive')
+        self.options_parser.add_option('-a', '--all', action='store_true', dest='driveAll')
         self.options,self.args = self.options_parser.parse_args()
 
-        print 'arg de size: ' + str(self.options.size)
-        print 'arg de only: ' + str(self.options.only)
-        print 'arg de protocol: ' + str(self.options.protocol)
-        print 'arg de transfert: ' + str(self.options.transfert)
-        print 'arg de file: ' + str(self.options.file)
+        if self.options.driveAll:
+            self.options.drive = ['amazon','dropbox','googledrive']
+
 
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
-#            sys.exit()
+            sys.exit()
 
-        print 'You choose to do all tests with a random file of ' + str(self.options.size)
+
+        if not self.options.drive:
+            if self.options.file:
+                print 'You choose to do all tests with this file  ' + str(self.options.file)
+            else:
+                print 'You choose to do all tests with a random file  ' + str(self.options.size)
+        else:
+            print 'You choose to a specific tests on '+ str(self.options.drive) +' with a random file of ' + str(self.options.size)
+
+        sys.exit()
 
     def create_file(self, size):
         """ """
@@ -70,7 +78,7 @@ class Bench(Engine):
 
         size = dict
         if not self.options.only:
-            size = igeom(128, 2048, 5)
+            size = igeom(128, int(self.options.size), 5)
         else:
             size = {2048}
 
@@ -95,7 +103,7 @@ class Bench(Engine):
                 p = providerGD.ProviderGD()
 
             logger.info('Treating combination %s', pformat(comb))
-            comb_dir = pathResults + '/'+ comb['drive'] + '/' + slugify(comb)
+            comb_dir = pathResults + '/' + slugify(comb)
             try:
                 os.mkdir(comb_dir)
             except:
@@ -111,7 +119,7 @@ class Bench(Engine):
                     p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
                     up_time = timer.elapsed()
                     p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
-                                           ,comb_dir+'/'+fname.split('/')[-1])
+                                        ,comb_dir+'/'+fname.split('/')[-1])
                     dl_time = timer.elapsed() - up_time
 
                     # delete le fichier chez Amazon
@@ -122,7 +130,7 @@ class Bench(Engine):
                     p.upload_file_sdk(client, fname, fname.split('/')[-1])
                     up_time = timer.elapsed()
                     p.download_file_sdk(client, fname.split('/')[-1],
-                                           comb_dir + '/' + fname.split('/')[-1])
+                                        comb_dir + '/' + fname.split('/')[-1])
                     dl_time = timer.elapsed() - up_time
 
                     # delete le fichier chez Dropbox
