@@ -17,8 +17,9 @@ import providerDB
 
 from optparse import OptionParser
 
+
 def cb(option, opt_str, value, parser):
-        args=[]
+        args = []
         for arg in parser.rargs:
                 if arg[0] != "-":
                         args.append(arg)
@@ -51,7 +52,6 @@ class Bench(Engine):
         print 'arg de transfert: ' + str(self.options.transfert)
         print 'arg de file: ' + str(self.options.file)
 
-
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
 #            sys.exit()
@@ -67,9 +67,16 @@ class Bench(Engine):
 
     def run(self):
         """ """
-        parameters = {'size': igeom(128, 2048, 5),
+
+        size = dict
+        if not self.options.only:
+            size = igeom(128, 2048, 5)
+        else:
+            size = {2048}
+
+        parameters = {'size': size,
                       'if': ['rest', 'sdk'],
-                      'drive':self.options.drive}
+                      'drive': self.options.drive}
         p = None
         combs = sweep(parameters)
         date = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
@@ -107,7 +114,7 @@ class Bench(Engine):
                                            ,comb_dir+'/'+fname.split('/')[-1])
                     dl_time = timer.elapsed() - up_time
 
-                    # delete le fichier chez Dropbox
+                    # delete le fichier chez Amazon
                     p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
                 elif p.provider_name == "dropbox":
@@ -128,7 +135,7 @@ class Bench(Engine):
                     p.download_file_sdk(drive_service, new_file)
                     dl_time = timer.elapsed() - up_time
 
-                    # delete le fichier chez Dropbox
+                    # delete le fichier chez Google drive
                     p.delete_file_sdk(drive_service, new_file['id'])
 
                 sweeper.done(comb)
