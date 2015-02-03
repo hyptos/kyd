@@ -48,7 +48,7 @@ class Bench(Engine):
         self.options,self.args = self.options_parser.parse_args()
 
         if self.options.driveAll:
-            self.options.drive = ['amazon','dropbox','googledrive']
+            self.drive = ['amazon','dropbox','googledrive']
 
 
         if self.options.size is None and self.options.file is False:
@@ -64,7 +64,7 @@ class Bench(Engine):
         else:
             print 'You choose to a specific tests on '+ str(self.options.drive)
 
-        #sys.exit()
+        # sys.exit()
 
     def create_file(self, size):
         """ """
@@ -86,10 +86,17 @@ class Bench(Engine):
             statinfo = os.stat(self.options.file)
             size = {long(statinfo.st_size)}
 
+        drive = None
+        if self.options.drive:
+            drive = self.options.drive
+        else:
+            drive = self.drive
+
+
         print size
         parameters = {'size': size,
                       'if': ['rest', 'sdk'],
-                      'drive': self.options.drive}
+                      'drive': drive}
         p = None
         combs = sweep(parameters)
         date = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
