@@ -3,6 +3,7 @@
 import tempfile
 from pprint import pformat
 import datetime
+import sys
 
 import os
 import dropbox
@@ -13,6 +14,20 @@ from boto.s3.connection import S3Connection
 import providerGD
 import providerS3
 import providerDB
+
+from optparse import OptionParser
+
+def cb(option, opt_str, value, parser):
+        args=[]
+        for arg in parser.rargs:
+                if arg[0] != "-":
+                        args.append(arg)
+                else:
+                        del parser.rargs[:len(args)]
+                        break
+        if getattr(parser.values, option.dest):
+                args.extend(getattr(parser.values, option.dest))
+        setattr(parser.values, option.dest, args)
 
 
 class Bench(Engine):
@@ -27,22 +42,21 @@ class Bench(Engine):
         self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium', default=False)
         self.options_parser.add_option('-f', '--file', dest='file', metavar="FILE", help='file to test', default=False)
         self.options_parser.add_option('-t', '--transfert', dest='transfert', choices=['inter', 'upload','download','upDown'], default='upDown')
-        self.options_parser.add_option('-d', '--drive', dest='drive', choices=['dropbox', 'amazon', 'googledrive', 'all'], default='all')
+        self.options_parser.add_option('-d', '--drive', callback=cb, action='callback', dest='drive')
         self.options,self.args = self.options_parser.parse_args()
+
         print 'arg de size: ' + str(self.options.size)
         print 'arg de only: ' + str(self.options.only)
         print 'arg de protocol: ' + str(self.options.protocol)
         print 'arg de transfert: ' + str(self.options.transfert)
         print 'arg de file: ' + str(self.options.file)
-        print 'arg de cloud: ' + str(self.options.drive)
+
 
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
-            # sys.exit()
+#            sys.exit()
 
         print 'You choose to do all tests with a random file of ' + str(self.options.size)
-
-
 
     def create_file(self, size):
         """ """
@@ -53,26 +67,28 @@ class Bench(Engine):
 
     def run(self):
         """ """
-        if self.options.drive == 'amazon':
-            p = providerS3.ProviderS3()
-        elif self.options.drive == 'dropbox':
-            p = providerDB.ProviderDB()
-        elif self.options.drive == 'googledrive':
-            p = providerGD.ProviderGD()
-
         parameters = {'size': igeom(128, 2048, 5),
-                      'if': ['rest', 'sdk']}
+                      'if': ['rest', 'sdk'],
+                      'drive':self.options.drive}
+        p = None
         combs = sweep(parameters)
         date = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
-        pathResults = os.getcwd() + '/Results/' + p.provider_name + '/Bench' + date
+        pathResults = os.getcwd() + '/Results/Bench' + date
         sweeper = ParamSweeper(pathResults + "/sweeps", combs)
 
         f = open(pathResults + '/results.txt', 'w')
         while len(sweeper.get_remaining()) > 0:
             comb = sweeper.get_next()
 
+            if comb['drive'] == 'amazon':
+                p = providerS3.ProviderS3()
+            elif comb['drive'] == 'dropbox':
+                p = providerDB.ProviderDB()
+            else:
+                p = providerGD.ProviderGD()
+
             logger.info('Treating combination %s', pformat(comb))
-            comb_dir = pathResults + '/' + slugify(comb)
+            comb_dir = pathResults + '/'+ comb['drive'] + '/' + slugify(comb)
             try:
                 os.mkdir(comb_dir)
             except:

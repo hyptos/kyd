@@ -1,6 +1,7 @@
 dirs = $(shell find . -name 'res*.txt')
 
 clean:
+	rm -rf Bench*
 	rm -rf Results
 	rm -f *.pyc
 
