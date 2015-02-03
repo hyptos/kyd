@@ -60,11 +60,11 @@ class Bench(Engine):
             if self.options.file:
                 print 'You choose to do all tests with this file  ' + str(self.options.file)
             else:
-                print 'You choose to do all tests with a random file  ' + str(self.options.size)
+                print 'You choose to do all tests with a random file of this size ' + str(self.options.size)
         else:
-            print 'You choose to a specific tests on '+ str(self.options.drive) +' with a random file of ' + str(self.options.size)
+            print 'You choose to a specific tests on '+ str(self.options.drive)
 
-        sys.exit()
+        #sys.exit()
 
     def create_file(self, size):
         """ """
@@ -77,11 +77,16 @@ class Bench(Engine):
         """ """
 
         size = dict
-        if not self.options.only:
-            size = igeom(128, int(self.options.size), 5)
+        if not self.options.file:
+            if not self.options.only:
+                size = igeom(128, int(self.options.size), 5)
+            else:
+                size = {long(self.options.size)}
         else:
-            size = {2048}
+            statinfo = os.stat(self.options.file)
+            size = {long(statinfo.st_size)}
 
+        print size
         parameters = {'size': size,
                       'if': ['rest', 'sdk'],
                       'drive': self.options.drive}
@@ -109,7 +114,10 @@ class Bench(Engine):
             except:
                 pass
 
-            fname = self.create_file(comb['size'])
+            if not self.options.file:
+                fname = self.create_file(comb['size'])
+            else:
+                fname = self.options.file
 
             timer = Timer()
 
@@ -152,7 +160,7 @@ class Bench(Engine):
                 sweeper.skip(comb)
                 continue
             os.remove(fname)
-            f.write("%f %i %f %f\n" % (timer.start_date(), comb['size'], up_time, dl_time))
+            f.write("%s %s %f %i %f %f\n" % (comb['drive'],comb['if'],timer.start_date(), comb['size'], up_time, dl_time))
         f.close()
         os.rmdir(self.result_dir)
 
