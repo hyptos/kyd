@@ -16,6 +16,7 @@ import providerS3
 import providerDB
 
 from optparse import OptionParser
+import requests
 
 
 def cb(option, opt_str, value, parser):
@@ -30,6 +31,19 @@ def cb(option, opt_str, value, parser):
                 args.extend(getattr(parser.values, option.dest))
         setattr(parser.values, option.dest, args)
 
+def getLocalisation():
+    r = requests.get('http://ip-api.com/json/')
+
+    if r.status_code == 200:
+        content = r.json()
+        return {'ip':content['query'],'lat':str(content['lat']),'lon':str(content['lon']),'city':str(content['city']),'country':str(content['country'])}
+    else:
+        p = requests.get('http://www.telize.com/geoip?callback=getgeoip')
+        if r.status_code == 200:
+            content = p.json()
+            return {'ip':content['ip'],'lat':str(content['latitude']),'lon':str(content['longitude']),'city':str(content['city']),'country':str(content['country'])}
+        else:
+            return None
 
 class Bench(Engine):
     """  """
@@ -167,7 +181,18 @@ class Bench(Engine):
                 sweeper.skip(comb)
                 continue
             os.remove(fname)
-            f.write("%s %s %f %i %f %f\n" % (comb['drive'],comb['if'],timer.start_date(), comb['size'], up_time, dl_time))
+            localisation = getLocalisation()
+            f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
+                                                         localisation['lat'],
+                                                         localisation['lon'],
+                                                         localisation['city'],
+                                                         localisation['country'],
+                                                         comb['drive'],
+                                                         comb['if'],
+                                                         timer.start_date(),
+                                                         comb['size'],
+                                                         up_time,
+                                                         dl_time))
         f.close()
         os.rmdir(self.result_dir)
 
