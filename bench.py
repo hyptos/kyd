@@ -90,6 +90,8 @@ class Bench(Engine):
     def run(self):
         """ """
 
+        localisation = getLocalisation()
+
         size = dict
         if not self.options.file:
             if not self.options.only:
@@ -106,10 +108,9 @@ class Bench(Engine):
         else:
             drive = self.drive
 
-
-        print size
+        interface = ['rest', 'sdk']
         parameters = {'size': size,
-                      'if': ['rest', 'sdk'],
+                      'if': interface,
                       'drive': drive}
         p = None
         combs = sweep(parameters)
@@ -119,80 +120,85 @@ class Bench(Engine):
 
         f = open(pathResults + '/results.txt', 'w')
         while len(sweeper.get_remaining()) > 0:
-            comb = sweeper.get_next()
+            # sort the parameters
+            for i in interface:
+                for dr in drive:
+                    for s in size:
+                        comb = sweeper.get_next(filtr = lambda r: filter(lambda x: x['drive'] == dr and  x['size'] == s and x['if'] == i, r))
+                        if not comb: continue
 
-            if comb['drive'] == 'amazon':
-                p = providerS3.ProviderS3()
-            elif comb['drive'] == 'dropbox':
-                p = providerDB.ProviderDB()
-            else:
-                p = providerGD.ProviderGD()
+                        # start of the workflow
+                        if comb['drive'] == 'amazon':
+                            p = providerS3.ProviderS3()
+                        elif comb['drive'] == 'dropbox':
+                            p = providerDB.ProviderDB()
+                        else:
+                            p = providerGD.ProviderGD()
 
-            logger.info('Treating combination %s', pformat(comb))
-            comb_dir = pathResults + '/' + slugify(comb)
-            try:
-                os.mkdir(comb_dir)
-            except:
-                pass
+                        logger.info('Treating combination %s', pformat(comb))
+                        comb_dir = pathResults + '/' + slugify(comb)
+                        try:
+                            os.mkdir(comb_dir)
+                        except:
+                            pass
 
-            if not self.options.file:
-                fname = self.create_file(comb['size'])
-            else:
-                fname = self.options.file
+                        if not self.options.file:
+                            fname = self.create_file(comb['size'])
+                        else:
+                            fname = self.options.file
 
-            timer = Timer()
+                        timer = Timer()
 
-            if comb['if'] == 'sdk':
-                if p.provider_name == "amazon":
-                    p.bucketKey += fname
-                    p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
-                    up_time = timer.elapsed()
-                    p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
-                                        ,comb_dir+'/'+fname.split('/')[-1])
-                    dl_time = timer.elapsed() - up_time
+                        if comb['if'] == 'sdk':
+                            if p.provider_name == "amazon":
+                                p.bucketKey += fname
+                                p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
+                                up_time = timer.elapsed()
+                                p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
+                                                    ,comb_dir+'/'+fname.split('/')[-1])
+                                dl_time = timer.elapsed() - up_time
 
-                    # delete le fichier chez Amazon
-                    p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
+                                # delete le fichier chez Amazon
+                                p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
-                elif p.provider_name == "dropbox":
-                    client = p.getToken()
-                    p.upload_file_sdk(client, fname, fname.split('/')[-1])
-                    up_time = timer.elapsed()
-                    p.download_file_sdk(client, fname.split('/')[-1],
-                                        comb_dir + '/' + fname.split('/')[-1])
-                    dl_time = timer.elapsed() - up_time
+                            elif p.provider_name == "dropbox":
+                                client = p.getToken()
+                                p.upload_file_sdk(client, fname, fname.split('/')[-1])
+                                up_time = timer.elapsed()
+                                p.download_file_sdk(client, fname.split('/')[-1],
+                                                    comb_dir + '/' + fname.split('/')[-1])
+                                dl_time = timer.elapsed() - up_time
 
-                    # delete le fichier chez Dropbox
-                    client.file_delete(fname.split('/')[-1])
+                                # delete le fichier chez Dropbox
+                                client.file_delete(fname.split('/')[-1])
 
-                elif p.provider_name == "googledrive":
-                    drive_service = p.getConnexion()
-                    new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
-                    up_time = timer.elapsed()
-                    p.download_file_sdk(drive_service, new_file)
-                    dl_time = timer.elapsed() - up_time
+                            elif p.provider_name == "googledrive":
+                                drive_service = p.getConnexion()
+                                new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
+                                up_time = timer.elapsed()
+                                p.download_file_sdk(drive_service, new_file)
+                                dl_time = timer.elapsed() - up_time
 
-                    # delete le fichier chez Google drive
-                    p.delete_file_sdk(drive_service, new_file['id'])
+                                # delete le fichier chez Google drive
+                                p.delete_file_sdk(drive_service, new_file['id'])
 
-                sweeper.done(comb)
-            elif comb['if'] == 'rest':
-                logger.warning('REST interface not implemented')
-                sweeper.skip(comb)
-                continue
-            os.remove(fname)
-            localisation = getLocalisation()
-            f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
-                                                         localisation['lat'],
-                                                         localisation['lon'],
-                                                         localisation['city'],
-                                                         localisation['country'],
-                                                         comb['drive'],
-                                                         comb['if'],
-                                                         timer.start_date(),
-                                                         comb['size'],
-                                                         up_time,
-                                                         dl_time))
+                            sweeper.done(comb)
+                        elif comb['if'] == 'rest':
+                            logger.warning('REST interface not implemented')
+                            sweeper.skip(comb)
+                            continue
+                        f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
+                                                                     localisation['lat'],
+                                                                     localisation['lon'],
+                                                                     localisation['city'],
+                                                                     localisation['country'],
+                                                                     comb['drive'],
+                                                                     comb['if'],
+                                                                     timer.start_date(),
+                                                                     comb['size'],
+                                                                     up_time,
+                                                                     dl_time))
+                        os.remove(fname)
         f.close()
         os.rmdir(self.result_dir)
 
