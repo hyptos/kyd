@@ -119,7 +119,7 @@ class Bench(Engine):
 
         for n in range(0,int(self.options.ntest),1):
             combs = sweep(parameters)
-            date = datetime.datetime.now().strftime("%Y-%m-%d_%H:%M:%S")
+            date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             pathResults = os.getcwd() + '/Results/Bench' + date
             sweeper = ParamSweeper(pathResults + "/sweeps", combs)
             f = open(pathResults + '/results.txt', 'w')
