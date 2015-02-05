@@ -43,7 +43,7 @@ class ProviderGD(Provider):
         return new_file
 
 
-    def download_file_sdk(self, service, drive_file):
+    def download_file_sdk(self, service, drive_file, pathFile):
         """Download a file's content.
 
         Args:
@@ -57,7 +57,7 @@ class ProviderGD(Provider):
         if download_url:
             resp, content = service._http.request(download_url)
             if resp.status == 200:
-                out = open('testText10k_02.txt', 'wb')
+                out = open(pathFile, 'wb')
                 out.write(content)
                 out.close()
                 return out

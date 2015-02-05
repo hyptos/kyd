@@ -65,6 +65,8 @@ class Bench(Engine):
         if self.options.driveAll:
             self.drive = ['amazon','dropbox','googledrive']
 
+        if self.options.transfert:
+            self.transfert = ['upload','download']
 
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
@@ -112,10 +114,10 @@ class Bench(Engine):
         interface = ['rest', 'sdk']
         parameters = {'size': size,
                       'if': interface,
-                      'drive': drive}
+                      'drive': drive,
+                      'transfert':self.transfert}
 
         p = None
-
 
         for n in range(0,int(self.options.ntest),1):
             combs = sweep(parameters)
@@ -181,7 +183,7 @@ class Bench(Engine):
                                     drive_service = p.getConnexion()
                                     new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
                                     up_time = timer.elapsed()
-                                    p.download_file_sdk(drive_service, new_file)
+                                    p.download_file_sdk(drive_service, new_file,comb_dir+'/'+fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     # delete le fichier chez Google drive
