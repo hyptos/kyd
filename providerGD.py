@@ -53,7 +53,10 @@ class ProviderGD(Provider):
         Returns:
             File if successful, None otherwise.
         """
-        download_url = drive_file.get('downloadUrl')
+        if not drive_file:
+            download_url = drive_file.get('downloadUrl')
+        else:
+            download_url = self.retrieve_file_metadata(service,pathFile)
         if download_url:
             resp, content = service._http.request(download_url)
             if resp.status == 200:
@@ -67,6 +70,32 @@ class ProviderGD(Provider):
         else:
             # The file doesn't have any content stored on Drive.
             return None
+
+    def retrieve_file_metadata(self,service,fname):
+        """Retrieve a list of File resources.
+
+        Args:
+        service: Drive API service instance.
+        Returns:
+        List of File resources.
+        """
+        result = []
+        page_token = None
+        while True:
+            try:
+                param = {'maxResults':1}
+                if page_token:
+                    param['pageToken'] = page_token
+
+                files = service.files().list(**param).execute()
+                result.extend(files['items'])
+                page_token = files.get('nextPageToken')
+                if not page_token:
+                    break
+            except errors.HttpError, error:
+                print 'An error occurred: %s' % error
+                break
+            return result[0]['downloadUrl']
 
 
 

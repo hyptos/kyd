@@ -1,6 +1,7 @@
 from __future__ import print_function
 import csv
 import os
+from providerGD import ProviderGD
 
 
 def getAllResults():
@@ -60,5 +61,9 @@ def calcAverage():
 
     print (moy)
 
-calcAverage()
+
+p = ProviderGD()
+drive_service = p.getConnexion()
+tutu = p.retrieve_all_files(drive_service,'tpjunit.pdf')
+
 
