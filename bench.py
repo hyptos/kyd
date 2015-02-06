@@ -190,7 +190,7 @@ class Bench(Engine):
                                     print new_file
                                     up_time = timer.elapsed()
                                     if self.options.transfert == "download" or self.options.transfert == "upDown":
-                                        p.download_file_sdk(drive_service, new_file,comb_dir+'/'+fname.split('/')[-1])
+                                        p.download_file_sdk(drive_service, new_file, comb_dir+'/'+fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     # delete le fichier chez Google drive
