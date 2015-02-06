@@ -159,10 +159,13 @@ class Bench(Engine):
                             if comb['if'] == 'sdk':
                                 if p.provider_name == "amazon":
                                     p.bucketKey += fname
-                                    p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
+                                    if self.options.transfert == "upload" or self.options.transfert == "upDown":
+                                        p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
                                     up_time = timer.elapsed()
-                                    p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
-                                                        ,comb_dir+'/'+fname.split('/')[-1])
+
+                                    if self.options.transfert == "download" or self.options.transfert == "upDown":
+                                        p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
+                                                            ,comb_dir+'/'+fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     # delete le fichier chez Amazon
@@ -170,9 +173,11 @@ class Bench(Engine):
 
                                 elif p.provider_name == "dropbox":
                                     client = p.getToken()
-                                    p.upload_file_sdk(client, fname, fname.split('/')[-1])
+                                    if self.options.transfert == "upload" or self.options.transfert == "upDown":
+                                        p.upload_file_sdk(client, fname, fname.split('/')[-1])
                                     up_time = timer.elapsed()
-                                    p.download_file_sdk(client, fname.split('/')[-1],
+                                    if self.options.transfert == "download" or self.options.transfert == "upDown":
+                                        p.download_file_sdk(client, fname.split('/')[-1],
                                                         comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
@@ -182,8 +187,10 @@ class Bench(Engine):
                                 elif p.provider_name == "googledrive":
                                     drive_service = p.getConnexion()
                                     new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
+                                    print new_file
                                     up_time = timer.elapsed()
-                                    p.download_file_sdk(drive_service, new_file,comb_dir+'/'+fname.split('/')[-1])
+                                    if self.options.transfert == "download" or self.options.transfert == "upDown":
+                                        p.download_file_sdk(drive_service, new_file,comb_dir+'/'+fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     # delete le fichier chez Google drive
@@ -194,17 +201,31 @@ class Bench(Engine):
                                 logger.warning('REST interface not implemented')
                                 sweeper.skip(comb)
                                 continue
-                            f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
-                                                                            localisation['lat'],
-                                                                            localisation['lon'],
-                                                                            localisation['city'],
-                                                                            localisation['country'],
-                                                                            comb['drive'],
-                                                                            comb['if'],
-                                                                            timer.start_date(),
-                                                                            comb['size'],
-                                                                            up_time,
-                                                                            dl_time))
+                            if self.options.transfert == "upload" or self.options.transfert == "upDown":
+                                f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
+                                                                                localisation['lat'],
+                                                                                localisation['lon'],
+                                                                                localisation['city'],
+                                                                                localisation['country'],
+                                                                                comb['drive'],
+                                                                                comb['if'],
+                                                                                timer.start_date(),
+                                                                                comb['size'],
+                                                                                comb['transfert'],
+                                                                                up_time))
+
+                            if self.options.transfert == "download" or self.options.transfert == "upDown":
+                                f.write("%s %s %s %s %s %s %s %f %i %f %f\n" % (localisation['ip'],
+                                                                                localisation['lat'],
+                                                                                localisation['lon'],
+                                                                                localisation['city'],
+                                                                                localisation['country'],
+                                                                                comb['drive'],
+                                                                                comb['if'],
+                                                                                timer.start_date(),
+                                                                                comb['size'],
+                                                                                comb['transfert'],
+                                                                                dl_time))
                             os.remove(fname)
             f.close()
         os.rmdir(self.result_dir)
