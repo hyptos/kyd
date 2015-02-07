@@ -1,7 +1,7 @@
 KYP
 ==============
 
-https://magnum.travis-ci.com/hyptos/kyd.svg?token=gSMNMRn5ygdjm4n6o1XK
+![](https://magnum.travis-ci.com/hyptos/kyd.svg?token=gSMNMRn5ygdjm4n6o1XK)
 
 Authors :
 
