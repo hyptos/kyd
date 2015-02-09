@@ -39,7 +39,7 @@ Tutorial
 
 How to use the application
 
-[Imgur](http://i.imgur.com/Cr8gN8p.png?1)
+![Imgur](http://i.imgur.com/Cr8gN8p.png?1)
 
 Clean all results :
 
