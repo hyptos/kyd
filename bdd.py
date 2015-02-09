@@ -16,8 +16,19 @@ class ClientMongo():
     def cleanBdd(self):
         self.collection.remove({})
 
-    def getAll(self):
-        return self.collection.find()
+    def getAllAvgUpload(self):
+        pipe = [
+            {'$group':{'_id': {'drive' : "$drive", 'transfert':"upload"},'AverageDuration':{'$avg':'$time'}}}
+        ]
+
+        return self.collection.aggregate(pipeline=pipe)
+
+    def getAllAvgDownload(self):
+        pipe = [
+            {'$group':{'_id': {'drive' : "$drive", 'transfert':"download"},'AverageDuration':{'$avg':'$time'}}}
+        ]
+
+        return self.collection.aggregate(pipeline=pipe)
 
 
 # donnees de tests
@@ -37,6 +48,6 @@ test = {
 
 if __name__ == "__main__":
     c = ClientMongo()
-    for line in c.getAll():
-        print line
+    print c.getAllAvgUpload()
+    print c.getAllAvgDownload()
     # c.collection.insert(test)

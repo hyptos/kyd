@@ -218,6 +218,7 @@ class Bench(Engine):
                             timer = Timer()
                             up_time = 0
                             dl_time = 0
+                            start_date = datetime.datetime.now()
                             if comb['if'] == 'sdk':
                                 if p.provider_name == "amazon":
                                     # AMAZON
@@ -293,7 +294,7 @@ class Bench(Engine):
                                     'country': localisation['country'],
                                     'drive': comb['drive'],
                                     'interface': comb['if'],
-                                    'start_date': datetime.datetime.now(),
+                                    'start_date': start_date ,
                                     'size': comb['size'],
                                     'transfert': 'upload',
                                     'time':up_time
@@ -319,7 +320,7 @@ class Bench(Engine):
                                     'country': localisation['country'],
                                     'drive': comb['drive'],
                                     'interface': comb['if'],
-                                    'start_date': datetime.datetime.now(),
+                                    'start_date': start_date,
                                     'size': comb['size'],
                                     'transfert': 'download',
                                     'time':dl_time
