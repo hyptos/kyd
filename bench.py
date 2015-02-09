@@ -55,15 +55,41 @@ class Bench(Engine):
     def __init__(self):
         super(Bench, self).__init__()
 
-        self.options_parser.add_option('-s', '--size', dest='size', help='Size of the test', type=int)
-        self.options_parser.add_option('-o', '--only', dest='only', help='Test only this size of the test', action='store_true', default=False)
-        self.options_parser.add_option('-p', '--protocol', dest='protocol', choices=['sdk', 'rest', 'all'], default='all')
-        self.options_parser.add_option('-n', '--ntest', dest='ntest', help='Number of tests', default=5)
-        self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium',action='store_true', default=False)
-        self.options_parser.add_option('-f', '--file', dest='file', metavar="FILE", help='File to test', default=False)
-        self.options_parser.add_option('-t', '--transfert', dest='transfert', choices=['inter', 'upload','download','upDown'], default='upDown')
-        self.options_parser.add_option('-d', '--drive', callback=cb, action='callback', dest='drive')
-        self.options_parser.add_option('-a', '--all', action='store_true', dest='driveAll')
+        self.options_parser.add_option('-s', '--size', dest='size',
+                                       help='Size of the random file test',
+                                       type=int)
+        self.options_parser.add_option('-o', '--only', dest='only',
+                                       help='Test only this size of the test',
+                                       action='store_true',
+                                       default=False)
+        self.options_parser.add_option('-p', '--protocol', dest='protocol',
+                                       choices=['sdk', 'rest', 'all'],
+                                       help='Specify a protocol from SDK or REST (default:all)',
+                                       default='all')
+        self.options_parser.add_option('-n', '--ntest', dest='ntest',
+                                       help='Number of tests',
+                                       default=5)
+        self.options_parser.add_option('-m', '--premium', dest='premium',
+                                       help='Account used is premium',
+                                       action='store_true',
+                                       default=False)
+        self.options_parser.add_option('-f', '--file', dest='file',
+                                       metavar="FILE",
+                                       help='File to test',
+                                       default=False)
+        self.options_parser.add_option('-t', '--transfert', dest='transfert',
+                                       choices=['inter', 'upload','download','upDown'],
+                                       help='Test a specific transfer type inter, upload, download, upDown(default:all)',
+                                       default='upDown')
+        self.options_parser.add_option('-d', '--drive',
+                                       callback=cb,
+                                       help='Test a  specific drive from googledrive, amazon, dropbox',
+                                       action='callback',
+                                       dest='drive')
+        self.options_parser.add_option('-a', '--all',
+                                       action='store_true',
+                                       help='Test all the possible drives',
+                                       dest='driveAll')
         self.options,self.args = self.options_parser.parse_args()
 
         if self.options.driveAll:
