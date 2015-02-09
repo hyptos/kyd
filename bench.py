@@ -31,6 +31,10 @@ def cb(option, opt_str, value, parser):
                 args.extend(getattr(parser.values, option.dest))
         setattr(parser.values, option.dest, args)
 
+def getFilSize(pathFile):
+    statinfo = os.stat(pathFile)
+    return {long(statinfo.st_size)}
+
 def getLocalisation():
     r = requests.get('http://ip-api.com/json/')
 
@@ -54,7 +58,7 @@ class Bench(Engine):
         self.options_parser.add_option('-s', '--size', dest='size', help='Size of the test', type=int)
         self.options_parser.add_option('-o', '--only', dest='only', help='Test only this size of the test', action='store_true', default=False)
         self.options_parser.add_option('-p', '--protocol', dest='protocol', choices=['sdk', 'rest', 'all'], default='all')
-        self.options_parser.add_option('-n', '--ntest', dest='ntest', help='Number of tests', default=10)
+        self.options_parser.add_option('-n', '--ntest', dest='ntest', help='Number of tests', default=5)
         self.options_parser.add_option('-m', '--premium', dest='premium', help='Account used is premium',action='store_true', default=False)
         self.options_parser.add_option('-f', '--file', dest='file', metavar="FILE", help='File to test', default=False)
         self.options_parser.add_option('-t', '--transfert', dest='transfert', choices=['inter', 'upload','download','upDown'], default='upDown')
@@ -66,6 +70,13 @@ class Bench(Engine):
             self.drive = ['amazon','dropbox','googledrive']
 
         self.transfert = [self.options.transfert]
+        self.OnlyDownload = False
+        if len(self.transfert) == 1 :
+            if self.transfert[0] == 'download':
+                if not self.options.file:
+                    self.OnlyDownload = True
+                    print 'You must give a file with this option -t download '
+
 
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
@@ -101,8 +112,10 @@ class Bench(Engine):
             else:
                 size = {long(self.options.size)}
         else:
-            statinfo = os.stat(self.options.file)
-            size = {long(statinfo.st_size)}
+            if self.OnlyDownload:
+                size = getFilSize(self.options.file)
+            else:
+                size = {0}
 
         drive = None
         if self.options.drive:
@@ -159,17 +172,22 @@ class Bench(Engine):
                             if comb['if'] == 'sdk':
                                 if p.provider_name == "amazon":
                                     #AMAZON
-                                    p.bucketKey += fname
+                                    if self.OnlyDownload:
+                                        p.bucketKey += fname
+                                    else:
+                                        p.bucketKey += '/' + fname
                                     if comb['transfert'] == "upload" or comb['transfert'] == 'upDown':
-                                        p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey, fname)
+                                        p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName),
+                                                          p.bucketKey, fname)
                                     up_time = timer.elapsed()
 
                                     if comb['transfert'] == "download" or comb['transfert'] == 'upDown':
                                         p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
-                                                            ,comb_dir+'/'+fname.split('/')[-1])
+                                                            , comb_dir + '/'+fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
+                                    if self.OnlyDownload:
+                                        p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
                                 elif p.provider_name == "dropbox":
                                     #DROPBOX
@@ -182,7 +200,8 @@ class Bench(Engine):
                                                         comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    client.file_delete(fname.split('/')[-1])
+                                    if self.OnlyDownload:
+                                        client.file_delete(fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
                                     #GOOGLEDRIVE
@@ -192,11 +211,11 @@ class Bench(Engine):
                                         new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
                                         up_time = timer.elapsed()
                                     if comb['transfert'] == 'download' or comb['transfert'] == 'upDown':
-                                        if self.options.transfert == "download" or self.options.transfert == "upDown":
-                                            p.download_file_sdk(drive_service, new_file, comb_dir+'/'+fname.split('/')[-1])
+                                        p.download_file_sdk(drive_service, new_file, comb_dir+'/'+fname.split('/')[-1])
                                         dl_time = timer.elapsed() - up_time
 
-                                    p.delete_file_sdk(drive_service, new_file['id'])
+                                    if self.OnlyDownload:
+                                        p.delete_file_sdk(drive_service, new_file['id'])
 
                                 sweeper.done(comb)
                             elif comb['if'] == 'rest':
@@ -228,7 +247,8 @@ class Bench(Engine):
                                                                                 comb['size'],
                                                                                 "download",
                                                                                 dl_time))
-                            os.remove(fname)
+                            if self.OnlyDownload:
+                                os.remove(fname)
             f.close()
         os.rmdir(self.result_dir)
 

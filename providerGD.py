@@ -53,10 +53,10 @@ class ProviderGD(Provider):
         Returns:
             File if successful, None otherwise.
         """
-        if not drive_file:
+        if drive_file:
             download_url = drive_file.get('downloadUrl')
         else:
-            download_url = self.retrieve_file_metadata(service,pathFile)
+            download_url = self.retrieve_file_metadata(service,pathFile.split('/')[-1])
         if download_url:
             resp, content = service._http.request(download_url)
             if resp.status == 200:
@@ -83,7 +83,7 @@ class ProviderGD(Provider):
         page_token = None
         while True:
             try:
-                param = {'maxResults':1}
+                param = {'maxResults':1,'q':"title = '"+fname+"'"}
                 if page_token:
                     param['pageToken'] = page_token
 
@@ -95,6 +95,7 @@ class ProviderGD(Provider):
             except errors.HttpError, error:
                 print 'An error occurred: %s' % error
                 break
+            print result
             return result[0]['downloadUrl']
 
 

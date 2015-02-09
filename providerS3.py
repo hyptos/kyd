@@ -1,3 +1,4 @@
+import ConfigParser
 from boto.s3.connection import S3Connection
 from provider import Provider
 from boto.s3.key import Key
@@ -13,8 +14,11 @@ class ProviderS3(Provider):
         """
 
         Provider.__init__(self,'amazon')
-        self.bucketName = 'mdicbucket2015'
-        self.bucketKey = 'mdicbucket2015_'
+        config = ConfigParser.ConfigParser()
+        config.readfp(open('conf.ini'))
+
+        self.bucketName = config.get('amazon', 'bucketName', 0)
+        self.bucketKey = config.get('amazon', 'bucketKey', 0)
 
     def getConnexion(self):
         """Log an instance for S3.
