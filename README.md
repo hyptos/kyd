@@ -36,10 +36,11 @@ Run all tests :
     
 Todo
 ===============
+
     - Add more documentation
-    - Add mongo insertion
     - Begin the paper of research
     - Add mongo client to query results
+
 Tutorial
 ===============
 
