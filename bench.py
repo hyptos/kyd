@@ -4,53 +4,73 @@ import tempfile
 from pprint import pformat
 import datetime
 import sys
-
 import os
-import dropbox
 from execo import Timer
 from execo_engine import Engine, sweep, ParamSweeper, igeom, slugify, logger
-from boto.s3.key import Key
-from boto.s3.connection import S3Connection
 import providerGD
 import providerS3
 import providerDB
-
-from optparse import OptionParser
 import requests
 
 
 def cb(option, opt_str, value, parser):
-        args = []
-        for arg in parser.rargs:
-                if arg[0] != "-":
-                        args.append(arg)
-                else:
-                        del parser.rargs[:len(args)]
-                        break
-        if getattr(parser.values, option.dest):
-                args.extend(getattr(parser.values, option.dest))
-        setattr(parser.values, option.dest, args)
+    """
+    :param option: the option
+    :param opt_str: the option string
+    :param value:  the value
+    :param parser: the parser
+    :return: None
+    """
+
+    args = []
+    for arg in parser.rargs:
+        if arg[0] != "-":
+            args.append(arg)
+        else:
+            del parser.rargs[:len(args)]
+            break
+    if getattr(parser.values, option.dest):
+        args.extend(getattr(parser.values, option.dest))
+    setattr(parser.values, option.dest, args)
+
 
 def getFilSize(pathFile):
+    """
+    :param pathFile: path of the file
+    :return: the size of the file
+    """
     statinfo = os.stat(pathFile)
     return {long(statinfo.st_size)}
 
+
 def getLocalisation():
+    """
+    Return an object that contains localisation data
+    :return: dict with ip,lat,lon,city and country
+    """
     r = requests.get('http://ip-api.com/json/')
 
     if r.status_code == 200:
         content = r.json()
-        return {'ip':content['query'],'lat':str(content['lat']),'lon':str(content['lon']),'city':str(content['city']),'country':str(content['country'])}
+        return {'ip': content['query'], 'lat': str(content['lat']),
+                'lon': str(content['lon']),
+                'city': str(content['city']),
+                'country': str(content['country'])}
     else:
         p = requests.get('http://www.telize.com/geoip?callback=getgeoip')
         if r.status_code == 200:
             content = p.json()
-            return {'ip':content['ip'],'lat':str(content['latitude']),'lon':str(content['longitude']),'city':str(content['city']),'country':str(content['country'])}
+            return {'ip': content['ip'],
+                    'lat': str(content['latitude']),
+                    'lon': str(content['longitude']),
+                    'city': str(content['city']),
+                    'country': str(content['country'])}
         else:
             return None
 
+
 class Bench(Engine):
-    """  """
+    """ Bench is the engine that help running all the tests """
 
     def __init__(self):
         super(Bench, self).__init__()
@@ -78,7 +98,7 @@ class Bench(Engine):
                                        help='File to test',
                                        default=False)
         self.options_parser.add_option('-t', '--transfert', dest='transfert',
-                                       choices=['inter', 'upload','download','upDown'],
+                                       choices=['inter', 'upload', 'download', 'upDown'],
                                        help='Test a specific transfer type inter, upload, download, upDown(default:all)',
                                        default='upDown')
         self.options_parser.add_option('-d', '--drive',
@@ -90,24 +110,22 @@ class Bench(Engine):
                                        action='store_true',
                                        help='Test all the possible drives',
                                        dest='driveAll')
-        self.options,self.args = self.options_parser.parse_args()
+        self.options, self.args = self.options_parser.parse_args()
 
         if self.options.driveAll:
-            self.drive = ['amazon','dropbox','googledrive']
+            self.drive = ['amazon', 'dropbox', 'googledrive']
 
         self.transfert = [self.options.transfert]
         self.OnlyDownload = False
-        if len(self.transfert) == 1 :
+        if len(self.transfert) == 1:
             if self.transfert[0] == 'download':
                 if not self.options.file:
                     self.OnlyDownload = True
                     print 'You must give a file with this option -t download '
 
-
         if self.options.size is None and self.options.file is False:
             print 'You have to give us a size or give us a file'
             sys.exit()
-
 
         if not self.options.drive:
             if self.options.file:
@@ -115,19 +133,19 @@ class Bench(Engine):
             else:
                 print 'You choose to do all tests with a random file of this size ' + str(self.options.size)
         else:
-            print 'You choose to a specific tests on '+ str(self.options.drive) + ' with ' + str(self.transfert)
+            print 'You choose to a specific tests on ' + str(self.options.drive) + ' with ' + str(self.transfert)
 
-        # sys.exit()
+            # sys.exit()
 
     def create_file(self, size):
-        """ """
+        """ Return the filename of file with the size of size """
         fd, fname = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as fout:
             fout.write(os.urandom(size))
         return fname
 
     def run(self):
-        """ """
+        """ run method from engine in order to do our workflow """
 
         localisation = getLocalisation()
 
@@ -153,11 +171,11 @@ class Bench(Engine):
         parameters = {'size': size,
                       'if': interface,
                       'drive': drive,
-                      'transfert':self.transfert}
+                      'transfert': self.transfert}
 
         p = None
 
-        for n in range(0,int(self.options.ntest),1):
+        for n in range(0, int(self.options.ntest), 1):
             combs = sweep(parameters)
             date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             pathResults = os.getcwd() + '/Results/Bench' + date
@@ -169,7 +187,9 @@ class Bench(Engine):
                 for i in interface:
                     for dr in drive:
                         for s in size:
-                            comb = sweeper.get_next(filtr = lambda r: filter(lambda x: x['drive'] == dr and  x['size'] == s and x['if'] == i, r))
+                            comb = sweeper.get_next(
+                                filtr=lambda r: filter(lambda x: x['drive'] == dr and x['size'] == s and x['if'] == i,
+                                                       r))
                             if not comb: continue
 
                             # start of the workflow
@@ -197,7 +217,7 @@ class Bench(Engine):
                             dl_time = 0
                             if comb['if'] == 'sdk':
                                 if p.provider_name == "amazon":
-                                    #AMAZON
+                                    # AMAZON
                                     if self.OnlyDownload:
                                         p.bucketKey += fname
                                     else:
@@ -209,35 +229,37 @@ class Bench(Engine):
 
                                     if comb['transfert'] == "download" or comb['transfert'] == 'upDown':
                                         p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
-                                                            , comb_dir + '/'+fname.split('/')[-1])
+                                                            , comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     if self.OnlyDownload:
                                         p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
                                 elif p.provider_name == "dropbox":
-                                    #DROPBOX
+                                    # DROPBOX
                                     client = p.getToken()
                                     if comb['transfert'] == "upload" or comb['transfert'] == 'upDown':
                                         p.upload_file_sdk(client, fname, fname.split('/')[-1])
                                     up_time = timer.elapsed()
                                     if comb['transfert'] == "download" or comb['transfert'] == 'upDown':
                                         p.download_file_sdk(client, fname.split('/')[-1],
-                                                        comb_dir + '/' + fname.split('/')[-1])
+                                                            comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     if self.OnlyDownload:
                                         client.file_delete(fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
-                                    #GOOGLEDRIVE
+                                    # GOOGLEDRIVE
                                     drive_service = p.getConnexion()
                                     new_file = None
                                     if comb['transfert'] == 'upload' or comb['transfert'] == 'upDown':
-                                        new_file = p.upload_file_sdk(drive_service, fname, fname.split('/')[-1], 'text/plain', 'desc')
+                                        new_file = p.upload_file_sdk(drive_service, fname,
+                                                                     fname.split('/')[-1], 'text/plain', 'desc')
                                         up_time = timer.elapsed()
                                     if comb['transfert'] == 'download' or comb['transfert'] == 'upDown':
-                                        p.download_file_sdk(drive_service, new_file, comb_dir+'/'+fname.split('/')[-1])
+                                        p.download_file_sdk(drive_service, new_file,
+                                                            comb_dir + '/' + fname.split('/')[-1])
                                         dl_time = timer.elapsed() - up_time
 
                                     if self.OnlyDownload:

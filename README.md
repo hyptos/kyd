@@ -5,9 +5,9 @@ KYP
 
 Authors :
 
-    Carole Bonfré
+    Carole Bonfré - CheepCheep
     
-    Antoine Martin
+    Antoine Martin - p0907931 - hyptos
 
 Tutors : 
 
@@ -21,6 +21,10 @@ Get started
 ===============
 
 Install dependencies :
+
+    virtualenv venv
+
+    source venv/bin/activate
 
     pip install -r requirements.txt
 

@@ -32,4 +32,4 @@ test = {
 if __name__ == "__main__":
     print 'start'
     c = ClientMongo()
-    c.collection.insert(test)
+    # c.collection.insert(test)

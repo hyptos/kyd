@@ -1,19 +1,13 @@
 from __future__ import print_function
 import csv
-import os
-from providerGD import ProviderGD
-
-
-def getAllResults():
-    for root, dirs, files in os.walk("."):
-        for file in files:
-            if file.endswith(".txt"):
-                if file.startswith("res"):
-                    print(os.path.join(root, file))
 
 
 def calcAverage():
+    """
+    Compute the average of each upload/download for each provider with a specific sizeand a specific protocol.
 
+    :return:
+    """
     all_download = 0
     all_upload = 0
     tab = dict()
@@ -61,9 +55,5 @@ def calcAverage():
 
     print (moy)
 
-
-p = ProviderGD()
-drive_service = p.getConnexion()
-tutu = p.retrieve_all_files(drive_service,'tpjunit.pdf')
 
 
