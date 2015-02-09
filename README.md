@@ -39,7 +39,7 @@ Tutorial
 
 How to use the application
 
-![](http://imgur.com/Cr8gN8p)
+[Imgur](http://i.imgur.com/Cr8gN8p.png?1)
 
 Clean all results :
 
@@ -57,7 +57,7 @@ Launch a bench on amazon with a random file of 2048 bytes, the tests will be run
 
 Result :
 
-![](http://imgur.com/EtAIbLG)
+![](http://i.imgur.com/EtAIbLG.png?1)
 
 Launch a bench on amazon and googledrive with a random file of 4096 bytes, the tests will be run 3 times.
 
@@ -65,7 +65,7 @@ Launch a bench on amazon and googledrive with a random file of 4096 bytes, the t
 
 Result :
 
-![](http://imgur.com/Lh8Qd3I)
+![](http://i.imgur.com/Lh8Qd3I.png?1)
 
 
 Licence
