@@ -1,6 +1,0 @@
-venv/
-.idea/
-syntax: glob
-*.pyc
-*.key
-*.pub
