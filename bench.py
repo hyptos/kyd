@@ -4,6 +4,8 @@ import tempfile
 from pprint import pformat
 import datetime
 import sys
+from bdd import ClientMongo
+
 import os
 from execo import Timer
 from execo_engine import Engine, sweep, ParamSweeper, igeom, slugify, logger
@@ -148,6 +150,7 @@ class Bench(Engine):
         """ run method from engine in order to do our workflow """
 
         localisation = getLocalisation()
+        mongo = ClientMongo()
 
         size = dict
         if not self.options.file:
@@ -282,6 +285,19 @@ class Bench(Engine):
                                                                                 comb['size'],
                                                                                 "upload",
                                                                                 up_time))
+                                mongo.collection.insert({
+                                    'ip': localisation['ip'],
+                                    'latitude': localisation['lat'],
+                                    'longitude':localisation['lon'],
+                                    'city': localisation['city'],
+                                    'country': localisation['country'],
+                                    'drive': comb['drive'],
+                                    'interface': comb['if'],
+                                    'start_date': datetime.datetime.now(),
+                                    'size': comb['size'],
+                                    'transfert': 'upload',
+                                    'time':up_time
+                                })
 
                             if comb['transfert'] == "download" or comb['transfert'] == "upDown":
                                 f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
@@ -295,6 +311,20 @@ class Bench(Engine):
                                                                                 comb['size'],
                                                                                 "download",
                                                                                 dl_time))
+                                mongo.collection.insert({
+                                    'ip': localisation['ip'],
+                                    'latitude': localisation['lat'],
+                                    'longitude':localisation['lon'],
+                                    'city': localisation['city'],
+                                    'country': localisation['country'],
+                                    'drive': comb['drive'],
+                                    'interface': comb['if'],
+                                    'start_date': datetime.datetime.now(),
+                                    'size': comb['size'],
+                                    'transfert': 'download',
+                                    'time':dl_time
+                                })
+
                             if self.OnlyDownload:
                                 os.remove(fname)
             f.close()

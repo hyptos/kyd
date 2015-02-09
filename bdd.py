@@ -13,6 +13,12 @@ class ClientMongo():
         self.db =  self.client.kydDb
         self.collection = self.db.kyd
 
+    def cleanBdd(self):
+        self.collection.remove({})
+
+    def getAll(self):
+        return self.collection.find()
+
 
 # donnees de tests
 test = {
@@ -30,6 +36,7 @@ test = {
 }
 
 if __name__ == "__main__":
-    print 'start'
     c = ClientMongo()
+    for line in c.getAll():
+        print line
     # c.collection.insert(test)

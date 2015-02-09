@@ -20,6 +20,8 @@ University Claude Bernard Lyon 1
 Get started
 ===============
 
+Populate the conf.ini
+
 Install dependencies :
 
     virtualenv venv
