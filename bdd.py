@@ -1,6 +1,8 @@
 import ConfigParser
 import datetime
 from pymongo import MongoClient
+import plotly.plotly as py
+from plotly.graph_objs import *
 
 class ClientMongo():
     def __init__(self):
@@ -25,7 +27,17 @@ class ClientMongo():
 
     def getAllAvgDownload(self):
         pipe = [
-            {'$group':{'_id': {'drive' : "$drive", 'transfert':"download"},'AverageDuration':{'$avg':'$time'}}}
+            {
+                '$group':{
+                    '_id': {'drive' : "$drive", 'transfert':"$transfert", 'size':"$size"},'AverageDuration':{'$avg':'$time'}
+                }
+            },
+            {
+                '$sort':{
+                    'size' : 1,
+                    'AverageDuration':1
+                }
+            }
         ]
 
         return self.collection.aggregate(pipeline=pipe)
@@ -48,6 +60,13 @@ test = {
 
 if __name__ == "__main__":
     c = ClientMongo()
-    print c.getAllAvgUpload()
-    print c.getAllAvgDownload()
-    # c.collection.insert(test)
+    fd = open('all_result_download.txt','w')
+    fu = open('all_result_upload.txt','w')
+    for p in c.getAllAvgDownload()['result']:
+        if p['_id']['transfert'] == "download":
+            fd.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+        else:
+            fu.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+
+    fd.close()
+    fu.close()

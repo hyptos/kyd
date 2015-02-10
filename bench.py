@@ -155,7 +155,10 @@ class Bench(Engine):
         size = dict
         if not self.options.file:
             if not self.options.only:
-                size = igeom(128, int(self.options.size), 5)
+                size = {1,long(self.options.size*0.25),
+                        long(self.options.size*0.5),
+                        long(self.options.size*0.75),
+                        long(self.options.size)}
             else:
                 size = {long(self.options.size)}
         else:
@@ -179,6 +182,8 @@ class Bench(Engine):
         p = None
 
         for n in range(0, int(self.options.ntest), 1):
+            logger.info('---------------------')
+            logger.info('Round %i', n)
             combs = sweep(parameters)
             date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             pathResults = os.getcwd() + '/Results/Bench' + date

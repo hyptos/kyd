@@ -30,17 +30,17 @@ def calcAverage():
                 interface = row[6]
                 start_time = row[7]
                 size = row[8]
-                upload = row[9]
-                download = row[10]
+                transfert = row[9]
+                time = row[10]
                 try:
-                    tab[cloud, size, interface, "up"].append(upload)
-                    tab[cloud, size, interface, "dl"].append(download)
+                    tab[cloud, size, interface,transfert, "up"].append(time)
+                    tab[cloud, size, interface,transfert, "dl"].append(time)
                 except KeyError:
                     tab[cloud, size, interface, "up"] = [upload]
                     tab[cloud, size, interface, "dl"] = [download]
-                all_download += float(download)
+                all_download += float(time)
                 all_upload += float(upload)
-                #print ('%s\t%s\t%s' % (start_time, upload, download))
+                print ('%s\t%s\t%s' % (start_time, upload, download))
                 nb += 1
 
         moy = []
@@ -54,6 +54,9 @@ def calcAverage():
             moy.append((ip, lat, lon, ville, pays, test[0], test[1], test[2], test[3], res))
 
     print (moy)
+
+
+calcAverage()
 
 
 
