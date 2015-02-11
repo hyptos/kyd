@@ -144,6 +144,7 @@ class Bench(Engine):
         fd, fname = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as fout:
             fout.write(os.urandom(size))
+        logger.info('Je cree '+ fname)
         return fname
 
     def run(self):
@@ -241,7 +242,7 @@ class Bench(Engine):
                                                             , comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    if self.OnlyDownload:
+                                    if not self.OnlyDownload:
                                         p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
 
                                 elif p.provider_name == "dropbox":
@@ -255,7 +256,7 @@ class Bench(Engine):
                                                             comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    if self.OnlyDownload:
+                                    if not self.OnlyDownload:
                                         client.file_delete(fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
@@ -271,13 +272,16 @@ class Bench(Engine):
                                                             comb_dir + '/' + fname.split('/')[-1])
                                         dl_time = timer.elapsed() - up_time
 
-                                    if self.OnlyDownload:
+                                    if not self.OnlyDownload:
                                         p.delete_file_sdk(drive_service, new_file['id'])
 
                                 sweeper.done(comb)
                             elif comb['if'] == 'rest':
                                 logger.warning('REST interface not implemented')
                                 sweeper.skip(comb)
+                                if not self.OnlyDownload:
+                                    #logger.info('delete de '+fname)
+                                    os.remove(fname)
                                 continue
                             if comb['transfert'] == "upload" or comb['transfert'] == "upDown":
                                 f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
@@ -331,9 +335,11 @@ class Bench(Engine):
                                     'time':dl_time
                                 })
 
-                            if self.OnlyDownload:
+                            if not self.OnlyDownload:
+                                #logger.info('delete de '+fname)
                                 os.remove(fname)
             f.close()
+        #delete the Bench Folder
         os.rmdir(self.result_dir)
 
 

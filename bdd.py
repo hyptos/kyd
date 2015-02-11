@@ -60,13 +60,14 @@ test = {
 
 if __name__ == "__main__":
     c = ClientMongo()
-    fd = open('all_result_download.txt','w')
-    fu = open('all_result_upload.txt','w')
-    for p in c.getAllAvgDownload()['result']:
-        if p['_id']['transfert'] == "download":
-            fd.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
-        else:
-            fu.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
-
-    fd.close()
-    fu.close()
+    print c.getAllAvgDownload()
+#    fd = open('all_result_download.txt','w')
+#    fu = open('all_result_upload.txt','w')
+#    for p in c.getAllAvgDownload()['result']:
+#        if p['_id']['transfert'] == "download":
+#            fd.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+#        else:
+#            fu.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+#
+#    fd.close()
+#    fu.close()
