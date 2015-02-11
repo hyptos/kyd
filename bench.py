@@ -144,7 +144,7 @@ class Bench(Engine):
         fd, fname = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as fout:
             fout.write(os.urandom(size))
-        logger.info('Je cree '+ fname)
+        #logger.info('Je cree '+ fname)
         return fname
 
     def run(self):
