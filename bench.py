@@ -229,22 +229,23 @@ class Bench(Engine):
                             if comb['if'] == 'sdk':
                                 if p.provider_name == "amazon":
                                     # AMAZON
+                                    clientAmz = p.getConnexion()
                                     if self.OnlyDownload:
                                         p.bucketKey += fname
                                     else:
                                         p.bucketKey += '/' + fname
                                     if comb['transfert'] == "upload" or comb['transfert'] == 'upDown':
-                                        p.upload_file_sdk(p.getConnexion().get_bucket(p.bucketName),
+                                        p.upload_file_sdk(clientAmz.get_bucket(p.bucketName),
                                                           p.bucketKey, fname)
                                     up_time = timer.elapsed()
 
                                     if comb['transfert'] == "download" or comb['transfert'] == 'upDown':
-                                        p.download_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey
+                                        p.download_file_sdk(clientAmz.get_bucket(p.bucketName), p.bucketKey
                                                             , comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
                                     if not self.OnlyDownload:
-                                        p.delete_file_sdk(p.getConnexion().get_bucket(p.bucketName), p.bucketKey)
+                                        p.delete_file_sdk(clientAmz.get_bucket(p.bucketName), p.bucketKey)
 
                                 elif p.provider_name == "dropbox":
                                     # DROPBOX
