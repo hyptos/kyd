@@ -54,7 +54,8 @@ def getLocalisation():
 
     if r.status_code == 200:
         content = r.json()
-        return {'ip': content['query'], 'lat': str(content['lat']),
+        return {'ip': content['query'],
+                'lat': str(content['lat']),
                 'lon': str(content['lon']),
                 'city': str(content['city']),
                 'country': str(content['country'])}
@@ -282,6 +283,8 @@ class Bench(Engine):
                                 if not self.OnlyDownload:
                                     #logger.info('delete de '+fname)
                                     os.remove(fname)
+                                    # delete only if rest is implmented
+                                    #os.remove(comb_dir + '/' + fname.split('/')[-1])
                                 continue
                             if comb['transfert'] == "upload" or comb['transfert'] == "upDown":
                                 f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
@@ -338,6 +341,7 @@ class Bench(Engine):
                             if not self.OnlyDownload:
                                 #logger.info('delete de '+fname)
                                 os.remove(fname)
+                                os.remove(comb_dir + '/' + fname.split('/')[-1])
             f.close()
         #delete the Bench Folder
         os.rmdir(self.result_dir)
