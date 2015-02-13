@@ -1,7 +1,10 @@
 import ConfigParser
 from boto.s3.connection import S3Connection
+from boto.exception import BotoClientError, S3CreateError, S3ResponseError
+from execo_engine import logger
 from provider import Provider
 from boto.s3.key import Key
+
 
 
 class ProviderS3(Provider):
@@ -53,7 +56,13 @@ class ProviderS3(Provider):
         File if successful, None otherwise.
         """
         key_we_know_is_there = bucket.get_key(key, validate=False)
-        return key_we_know_is_there.get_contents_to_filename(newFileName)
+        try:
+            val = key_we_know_is_there.get_contents_to_filename(newFileName)
+        except S3ResponseError as e:
+            logger.warning('Error in Download ' + e.error_code + ' ' + e._error_message)
+            val = None
+
+        return val
 
     def upload_file_sdk(self, bucketName, keyName, fileName):
         """Upload a file to a specific bucket with a specific KeyName.
@@ -69,7 +78,11 @@ class ProviderS3(Provider):
         b = self.getConnexion().get_bucket(bucketName)
         k = self.getKey(b)
         k.key = keyName
-        k.set_contents_from_filename(fileName)
+        try:
+            k.set_contents_from_filename(fileName)
+        except S3ResponseError as e:
+            logger.warning('Error in Upload ' + e.error_code + ' ' + e._error_message)
+
 
     def delete_file_sdk(self, bucket, key):
         """Delete a file on S3.
@@ -94,5 +107,7 @@ class ProviderS3(Provider):
         Bucket instance if successful, None otherwise.
         """
         b = self.getConnexion()
-        return b.create_bucket(bucketName, location=locationGeo)
-
+        try:
+            return b.create_bucket(bucketName, location=locationGeo)
+        except S3CreateError as e:
+            logger.warning('Error in bucket creation ' + e.error_code + ' ' + e._error_message)
