@@ -258,8 +258,8 @@ class Bench(Engine):
                                                             comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    #if not self.OnlyDownload:
-                                        # client.file_delete(fname.split('/')[-1])
+                                    if not self.OnlyDownload:
+                                        p.delete_file(client,fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
                                     # GOOGLEDRIVE
@@ -283,7 +283,8 @@ class Bench(Engine):
                                 sweeper.skip(comb)
                                 if not self.OnlyDownload:
                                     #logger.info('delete de '+fname)
-                                    os.remove(fname)
+                                    if os.path.isfile(fname):
+                                        os.remove(fname)
                                     # delete only if rest is implmented
                                     #os.remove(comb_dir + '/' + fname.split('/')[-1])
                                 continue
@@ -341,8 +342,10 @@ class Bench(Engine):
 
                             if not self.OnlyDownload:
                                 #logger.info('delete de '+fname)
-                                os.remove(fname)
-                                os.remove(comb_dir + '/' + fname.split('/')[-1])
+                                if os.path.isfile(fname):
+                                    os.remove(fname)
+                                if os.path.isfile(comb_dir + '/' + fname):
+                                    os.remove(comb_dir + '/' + fname.split('/')[-1])
             f.close()
         #delete the Bench Folder
         os.rmdir(self.result_dir)

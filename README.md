@@ -38,8 +38,9 @@ Todo
 ===============
 
     - Add more documentation
-    - Begin the paper of research
-    - Add mongo client to query results
+    - Mode rafale a faire
+    - Gestion des erreurs
+    - Ajouter un provider ownCloud
 
 Tutorial
 ===============

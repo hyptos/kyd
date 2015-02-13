@@ -1,10 +1,12 @@
 import apiclient
+from execo_engine import logger
 import httplib2
 from oauth2client.file import Storage
 from apiclient.discovery import build
 from oauth2client.client import OAuth2WebServerFlow
 from apiclient import errors
 from provider import Provider
+import simplejson
 
 
 class ProviderGD(Provider):
@@ -37,9 +39,12 @@ class ProviderGD(Provider):
             'title': fileName,
             'description': fileDescription,
         }
-
-        new_file = service.files().insert(body=body, media_body=media_body).execute()
-
+        new_file = None
+        try:
+            new_file = service.files().insert(body=body, media_body=media_body).execute()
+        except errors.HttpError as e:
+            error = simplejson.loads(e.content)
+            logger.warning('Error in Upload ' + error.get('code') + error.get('message'))
         return new_file
 
 
@@ -58,15 +63,16 @@ class ProviderGD(Provider):
         else:
             download_url = self.retrieve_file_metadata(service,pathFile.split('/')[-1])
         if download_url:
-            resp, content = service._http.request(download_url)
-            if resp.status == 200:
-                out = open(pathFile, 'wb')
-                out.write(content)
-                out.close()
-                return out
-            else:
-                print 'An error occurred: %s' % resp
-                return None
+            try:
+                resp, content = service._http.request(download_url)
+                if resp.status == 200:
+                    out = open(pathFile, 'wb')
+                    out.write(content)
+                    out.close()
+                    return out
+            except errors.HttpError as e:
+                error = simplejson.loads(e.content)
+                logger.warning('Error in Download ' + error.get('code') + error.get('message'))
         else:
             # The file doesn't have any content stored on Drive.
             return None
@@ -146,5 +152,7 @@ class ProviderGD(Provider):
         """
         try:
             service.files().delete(fileId=file_id).execute()
-        except errors.HttpError, error:
-            print 'An error occurred: %s' % error
+        except errors.HttpError as e:
+            error = simplejson.loads(e.content)
+            logger.warning('Error in delete ' + error.get('code') + error.get('message'))
+
