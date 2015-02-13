@@ -2,7 +2,8 @@ import ConfigParser
 import dropbox
 from provider import Provider
 import requests
-
+from dropbox.client import ErrorResponse
+from execo_engine import logger
 
 class ProviderDB(Provider):
     """ Object to store the provider ids """
@@ -15,8 +16,12 @@ class ProviderDB(Provider):
                 fileName : Name of the new file in the drive.
             """
             f = open(filePath, 'rb')
-            response = client.put_file(fileName, f)
-            return response
+            try:
+                response = client.put_file(fileName, f)
+            except ErrorResponse as e:
+                logger.warning( str(e.status)+' '+ e.reason + ' : '+e.error_msg)
+                pass
+            return True
 
     def download_file_sdk(self, client, fileName, filePath):
         """Download a file's content.
@@ -25,10 +30,14 @@ class ProviderDB(Provider):
             fileName: Name of the file you want to download.
             filePath: Name of the new local file.
         """
-        f, _ = client.get_file_and_metadata(fileName)
-        out = open(filePath, 'wb')
-        out.write(f.read())
-        out.close()
+        try:
+		f, _ = client.get_file_and_metadata(fileName)
+		out = open(filePath, 'wb')
+	        out.write(f.read())
+        	out.close()
+	except ErrorResponse as e :
+		logger.warning( str(e.status)+' '+ e.reason + ' : '+e.error_msg)
+                pass
         return True
 
     def getNewToken(self):

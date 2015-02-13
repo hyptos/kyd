@@ -257,8 +257,8 @@ class Bench(Engine):
                                                             comb_dir + '/' + fname.split('/')[-1])
                                     dl_time = timer.elapsed() - up_time
 
-                                    if not self.OnlyDownload:
-                                        client.file_delete(fname.split('/')[-1])
+                                    #if not self.OnlyDownload:
+                                        # client.file_delete(fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
                                     # GOOGLEDRIVE
