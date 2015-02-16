@@ -12,7 +12,7 @@ import simplejson
 class ProviderGD(Provider):
     """ Object to store the provider ids """
 
-    def upload_file_sdk(self, service, filePath, fileName, fileType, fileDescription):
+    def upload_file_sdk(self, service, filePath, fileName, fileType):
         """Upload a file's content.
 
         Args:
@@ -26,10 +26,6 @@ class ProviderGD(Provider):
             File uploaded.
         """
 
-        MIMETYPE = 'text/plain'
-        TITLE = 'My New Text Document'
-        DESCRIPTION = 'A shiny new text document about lorem ipsum.'
-
         media_body = apiclient.http.MediaFileUpload(
             filePath,
             mimetype=fileType,
@@ -37,14 +33,14 @@ class ProviderGD(Provider):
         )
         body = {
             'title': fileName,
-            'description': fileDescription,
+            'description': 'Temporary file',
         }
         new_file = None
         try:
             new_file = service.files().insert(body=body, media_body=media_body).execute()
         except errors.HttpError as e:
             error = simplejson.loads(e.content)
-            logger.warning('Error in Upload ' + error.get('code') + error.get('message'))
+            logger.error('Error in Upload ' + error.get('code') + error.get('message'))
         return new_file
 
 
@@ -72,7 +68,7 @@ class ProviderGD(Provider):
                     return out
             except errors.HttpError as e:
                 error = simplejson.loads(e.content)
-                logger.warning('Error in Download ' + error.get('code') + error.get('message'))
+                logger.error('Error in Download ' + error.get('code') + error.get('message'))
         else:
             # The file doesn't have any content stored on Drive.
             return None
@@ -99,7 +95,7 @@ class ProviderGD(Provider):
                 if not page_token:
                     break
             except errors.HttpError, error:
-                print 'An error occurred: %s' % error
+                logger.error('An error occurred: %s' % error)
                 break
             print result
             return result[0]['downloadUrl']
@@ -153,5 +149,5 @@ class ProviderGD(Provider):
             service.files().delete(fileId=file_id).execute()
         except errors.HttpError as e:
             error = simplejson.loads(e.content)
-            logger.warning('Error in delete ' + error.get('code') + error.get('message'))
+            logger.error('Error in delete ' + error.get('code') + error.get('message'))
 

@@ -59,7 +59,7 @@ class ProviderS3(Provider):
         try:
             val = key_we_know_is_there.get_contents_to_filename(newFileName)
         except S3ResponseError as e:
-            logger.warning('Error in Download ' + e.error_code + ' ' + e._error_message)
+            logger.error('Error in Download ' + e.error_code + ' ' + e.message)
             val = None
 
         return val
@@ -81,7 +81,7 @@ class ProviderS3(Provider):
         try:
             k.set_contents_from_filename(fileName)
         except S3ResponseError as e:
-            logger.warning('Error in Upload ' + e.error_code + ' ' + e._error_message)
+            logger.error('Error in Upload ' + e.error_code + ' ' + e.message)
 
 
     def delete_file_sdk(self, bucket, key):
@@ -110,4 +110,4 @@ class ProviderS3(Provider):
         try:
             return b.create_bucket(bucketName, location=locationGeo)
         except S3CreateError as e:
-            logger.warning('Error in bucket creation ' + e.error_code + ' ' + e._error_message)
+            logger.error('Error in bucket creation ' + e.error_code + ' ' + e.message)

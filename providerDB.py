@@ -19,9 +19,9 @@ class ProviderDB(Provider):
             """
         f = open(filePath, 'rb')
         try:
-            response = client.put_file(fileName, f)
+            client.put_file(fileName, f)
         except ErrorResponse as e:
-            logger.warning('Error in Upload ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
+            logger.error('Error in Upload ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
             pass
         return True
 
@@ -38,7 +38,7 @@ class ProviderDB(Provider):
             out.write(f.read())
             out.close()
         except ErrorResponse as e:
-            logger.warning('Error in Download ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
+            logger.error('Error in Download ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
             pass
         return True
 
@@ -52,7 +52,7 @@ class ProviderDB(Provider):
             print "url:", flow.start()
             print "Please authorize in the browser. After you're done, press enter."
             auth_code = raw_input().strip()
-            access_token, user_id = flow.finish(auth_code)
+            access_token, _ = flow.finish(auth_code)
             config = ConfigParser.ConfigParser()
             config.readfp(open('conf.ini'))
             config.set('dropbox', 'token', access_token)
@@ -64,7 +64,7 @@ class ProviderDB(Provider):
         try:
             client.file_delete(fname)
         except ErrorResponse as e:
-            logger.warning('Error in Delete ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
+            logger.error('Error in Delete ' + str(e.status) + ' ' + e.reason + ' : ' + e.error_msg)
             pass
         return True
 

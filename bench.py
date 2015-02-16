@@ -15,10 +15,9 @@ import providerDB
 import requests
 
 
-def cb(option, opt_str, value, parser):
+def cb(option, value, parser):
     """
     :param option: the option
-    :param opt_str: the option string
     :param value:  the value
     :param parser: the parser
     :return: None
@@ -212,10 +211,10 @@ class Bench(Engine):
 
                             logger.info('Treating combination %s', pformat(comb))
                             comb_dir = pathResults + '/' + slugify(comb)
-                            try:
+
+                            if not os.path.isdir(comb_dir):
                                 os.mkdir(comb_dir)
-                            except:
-                                pass
+
 
                             if not self.options.file:
                                 fname = self.create_file(comb['size'])
@@ -267,7 +266,7 @@ class Bench(Engine):
                                     new_file = None
                                     if comb['transfert'] == 'upload' or comb['transfert'] == 'upDown':
                                         new_file = p.upload_file_sdk(drive_service, fname,
-                                                                     fname.split('/')[-1], 'text/plain', 'desc')
+                                                                     fname.split('/')[-1], 'text/plain')
                                         up_time = timer.elapsed()
                                     if comb['transfert'] == 'download' or comb['transfert'] == 'upDown':
                                         p.download_file_sdk(drive_service, new_file,
