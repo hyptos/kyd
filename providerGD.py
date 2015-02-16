@@ -61,7 +61,7 @@ class ProviderGD(Provider):
         if drive_file:
             download_url = drive_file.get('downloadUrl')
         else:
-            download_url = self.retrieve_file_metadata(service,pathFile.split('/')[-1])
+            download_url = self.retrieve_file_metadata(service, pathFile.split('/')[-1])
         if download_url:
             try:
                 resp, content = service._http.request(download_url)
@@ -77,7 +77,7 @@ class ProviderGD(Provider):
             # The file doesn't have any content stored on Drive.
             return None
 
-    def retrieve_file_metadata(self,service,fname):
+    def retrieve_file_metadata(self, service, fname):
         """Retrieve a list of File resources.
 
         Args:
@@ -89,7 +89,7 @@ class ProviderGD(Provider):
         page_token = None
         while True:
             try:
-                param = {'maxResults':1,'q':"title = '"+fname+"'"}
+                param = {'maxResults': 1, 'q': "title = '" + fname + "'"}
                 if page_token:
                     param['pageToken'] = page_token
 
@@ -105,7 +105,6 @@ class ProviderGD(Provider):
             return result[0]['downloadUrl']
 
 
-
     def __init__(self):
         """Init the connexion to Google Drive.
 
@@ -115,7 +114,7 @@ class ProviderGD(Provider):
             The drive service.
         """
 
-        Provider.__init__(self,'googledrive')
+        Provider.__init__(self, 'googledrive')
 
     def getConnexion(self):
 

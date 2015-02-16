@@ -1,10 +1,10 @@
 import ConfigParser
+
 from boto.s3.connection import S3Connection
-from boto.exception import BotoClientError, S3CreateError, S3ResponseError
+from boto.exception import S3CreateError, S3ResponseError
 from execo_engine import logger
 from provider import Provider
 from boto.s3.key import Key
-
 
 
 class ProviderS3(Provider):
@@ -16,7 +16,7 @@ class ProviderS3(Provider):
         Args:
         """
 
-        Provider.__init__(self,'amazon')
+        Provider.__init__(self, 'amazon')
         config = ConfigParser.ConfigParser()
         config.readfp(open('conf.ini'))
 

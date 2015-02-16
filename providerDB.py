@@ -1,4 +1,5 @@
 import ConfigParser
+
 import dropbox
 from provider import Provider
 import requests
@@ -59,7 +60,7 @@ class ProviderDB(Provider):
             return False
         return True
 
-    def delete_file(self,client,fname):
+    def delete_file(self, client, fname):
         try:
             client.file_delete(fname)
         except ErrorResponse as e:

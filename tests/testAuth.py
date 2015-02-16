@@ -1,13 +1,13 @@
 import ConfigParser
 import unittest
+
 import providerDB
 import providerGD
 import providerS3
 
 
 class testAuth(unittest.TestCase):
-
-    #test if tokens are up
+    # test if tokens are up
     def test_connexionGoogle(self):
         config = ConfigParser.ConfigParser()
         config.readfp(open('conf.ini'))
@@ -22,7 +22,6 @@ class testAuth(unittest.TestCase):
     def test_connexionDropboxToken(self):
         p = providerDB.ProviderDB()
         self.assertIsNotNone(p.getToken())
-
 
 
     def test_connexionS3(self):
@@ -50,8 +49,6 @@ class testAuth(unittest.TestCase):
     def test_connexionGoogleToken(self):
         p = providerGD.ProviderGD()
         self.assertIsNotNone(p.getConnexion())
-
-
 
 
 if __name__ == '__main__':

@@ -1,14 +1,14 @@
 #!venv/bin/python
 
-import tempfile
 from pprint import pformat
+from bdd import ClientMongo
+from execo import Timer
+from execo_engine import Engine, sweep, ParamSweeper, slugify, logger
+
+import tempfile
 import datetime
 import sys
-from bdd import ClientMongo
-
 import os
-from execo import Timer
-from execo_engine import Engine, sweep, ParamSweeper, igeom, slugify, logger
 import providerGD
 import providerS3
 import providerDB
@@ -145,7 +145,7 @@ class Bench(Engine):
         fd, fname = tempfile.mkstemp()
         with os.fdopen(fd, 'w') as fout:
             fout.write(os.urandom(size))
-        #logger.info('Je cree '+ fname)
+        # logger.info('Je cree '+ fname)
         return fname
 
     def run(self):
@@ -157,9 +157,9 @@ class Bench(Engine):
         size = dict
         if not self.options.file:
             if not self.options.only:
-                size = {1,long(self.options.size*0.25),
-                        long(self.options.size*0.5),
-                        long(self.options.size*0.75),
+                size = {1, long(self.options.size * 0.25),
+                        long(self.options.size * 0.5),
+                        long(self.options.size * 0.75),
                         long(self.options.size)}
             else:
                 size = {long(self.options.size)}
@@ -259,7 +259,7 @@ class Bench(Engine):
                                     dl_time = timer.elapsed() - up_time
 
                                     if not self.OnlyDownload:
-                                        p.delete_file(client,fname.split('/')[-1])
+                                        p.delete_file(client, fname.split('/')[-1])
 
                                 elif p.provider_name == "googledrive":
                                     # GOOGLEDRIVE
@@ -282,11 +282,11 @@ class Bench(Engine):
                                 logger.warning('REST interface not implemented')
                                 sweeper.skip(comb)
                                 if not self.OnlyDownload:
-                                    #logger.info('delete de '+fname)
+                                    # logger.info('delete de '+fname)
                                     if os.path.isfile(fname):
                                         os.remove(fname)
-                                    # delete only if rest is implmented
-                                    #os.remove(comb_dir + '/' + fname.split('/')[-1])
+                                        # delete only if rest is implmented
+                                        #os.remove(comb_dir + '/' + fname.split('/')[-1])
                                 continue
                             if comb['transfert'] == "upload" or comb['transfert'] == "upDown":
                                 f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
@@ -303,15 +303,15 @@ class Bench(Engine):
                                 mongo.collection.insert({
                                     'ip': localisation['ip'],
                                     'latitude': localisation['lat'],
-                                    'longitude':localisation['lon'],
+                                    'longitude': localisation['lon'],
                                     'city': localisation['city'],
                                     'country': localisation['country'],
                                     'drive': comb['drive'],
                                     'interface': comb['if'],
-                                    'start_date': start_date ,
+                                    'start_date': start_date,
                                     'size': comb['size'],
                                     'transfert': 'upload',
-                                    'time':up_time
+                                    'time': up_time
                                 })
 
                             if comb['transfert'] == "download" or comb['transfert'] == "upDown":
@@ -329,7 +329,7 @@ class Bench(Engine):
                                 mongo.collection.insert({
                                     'ip': localisation['ip'],
                                     'latitude': localisation['lat'],
-                                    'longitude':localisation['lon'],
+                                    'longitude': localisation['lon'],
                                     'city': localisation['city'],
                                     'country': localisation['country'],
                                     'drive': comb['drive'],
@@ -337,17 +337,17 @@ class Bench(Engine):
                                     'start_date': start_date,
                                     'size': comb['size'],
                                     'transfert': 'download',
-                                    'time':dl_time
+                                    'time': dl_time
                                 })
 
                             if not self.OnlyDownload:
-                                #logger.info('delete de '+fname)
+                                # logger.info('delete de '+fname)
                                 if os.path.isfile(fname):
                                     os.remove(fname)
                                 if os.path.isfile(comb_dir + '/' + fname):
                                     os.remove(comb_dir + '/' + fname.split('/')[-1])
             f.close()
-        #delete the Bench Folder
+        # delete the Bench Folder
         os.rmdir(self.result_dir)
 
 
