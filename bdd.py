@@ -29,13 +29,12 @@ class ClientMongo():
         pipe = [
             {
                 '$group':{
-                    '_id': {'drive' : "$drive", 'transfert':"$transfert", 'size':"$size"},'AverageDuration':{'$avg':'$time'}
+                    '_id': {'drive' : "$drive", 'transfert':"$transfert", 'size':"$size",'start_date':'$start_date'},'AverageDuration':{'$avg':'$time'}
                 }
             },
             {
                 '$sort':{
-                    'size' : 1,
-                    'AverageDuration':1
+                    'start_date' : 1
                 }
             }
         ]
@@ -60,13 +59,17 @@ test = {
 
 if __name__ == "__main__":
     c = ClientMongo()
-    print c.getAllAvgDownload()
-    fd = open('all_result_download.txt','w')
-    fu = open('all_result_upload.txt','w')
-    for p in c.getAllAvgDownload()['result']:
-        if p['_id']['transfert'] == "download":
-            fd.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
-        else:
-            fu.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
-    fd.close()
-    fu.close()
+    for t in  c.getAllAvgDownload()['result']:
+        if str(t['_id']['start_date']).startswith('2015-02-1'):
+            if str(t['_id']['size']) == '10000000':
+                print t
+
+    # fd = open('all_result_download.txt','w')
+    # fu = open('all_result_upload.txt','w')
+    # for p in c.getAllAvgDownload()['result']:
+    #     if p['_id']['transfert'] == "download":
+    #         fd.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+    #     else:
+    #         fu.write(p['_id']['drive'] + ' ' +  str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n' )
+    # fd.close()
+    # fu.close()
