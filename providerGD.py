@@ -95,7 +95,7 @@ class ProviderGD(Provider):
                 if not page_token:
                     break
             except errors.HttpError, error:
-                logger.error('An error occurred: %s' % error)
+                logger.error('An error occurred: ' + error)
                 break
             print result
             return result[0]['downloadUrl']
