@@ -9,7 +9,6 @@ __pycache__/
 *.pyc
 *.key
 *.pub
-*.ini
 
 # Distribution / packaging
 .Python
