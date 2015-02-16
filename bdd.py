@@ -3,7 +3,7 @@ import datetime
 from pymongo import MongoClient
 
 
-class ClientMongo:
+class ClientMongo(object):
     def __init__(self):
         config = ConfigParser.ConfigParser()
         config.readfp(open('conf.ini'))

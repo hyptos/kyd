@@ -15,7 +15,7 @@ import providerDB
 import requests
 
 
-def cb(option, value, parser):
+def cb(option, parser):
     """
     :param option: the option
     :param value:  the value

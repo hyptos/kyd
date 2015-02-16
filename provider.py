@@ -1,7 +1,7 @@
 import ConfigParser
 
 
-class Provider:
+class Provider(object):
     """ Object to store the provider ids """
 
     def __init__(self, providerName):
