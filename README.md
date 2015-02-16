@@ -3,6 +3,8 @@ KYP
 
 ![](https://magnum.travis-ci.com/hyptos/kyd.svg?token=gSMNMRn5ygdjm4n6o1XK)
 
+![](https://landscape.io/github/hyptos/kyd/master/landscape.svg?style=flat&badge_auth_token=fb17a46a03f64027863eb3ea2b9ee853)
+
 Authors :
 
     Carole Bonfré - CheepCheep
