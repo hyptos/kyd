@@ -15,7 +15,7 @@ import providerDB
 import requests
 
 
-def cb(option, parser):
+def cb(option, a, b, parser):
     """
     :param option: the option
     :param value:  the value
@@ -215,7 +215,6 @@ class Bench(Engine):
                             if not os.path.isdir(comb_dir):
                                 os.mkdir(comb_dir)
 
-
                             if not self.options.file:
                                 fname = self.create_file(comb['size'])
                             else:
@@ -285,7 +284,7 @@ class Bench(Engine):
                                     if os.path.isfile(fname):
                                         os.remove(fname)
                                         # delete only if rest is implmented
-                                        #os.remove(comb_dir + '/' + fname.split('/')[-1])
+                                        # os.remove(comb_dir + '/' + fname.split('/')[-1])
                                 continue
                             if comb['transfert'] == "upload" or comb['transfert'] == "upDown":
                                 f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
