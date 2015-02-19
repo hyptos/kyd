@@ -7,8 +7,7 @@
 \usepackage{titlesec} 
 \usepackage{fancyhdr}
 \usepackage{array}
-\usepackage{graphicx} 
-\usepackage{refstyle} 
+\usepackage{graphicx}
 \usepackage[margin=0.8in]{geometry}
 \usepackage{hyperref} 
 \usepackage{todonotes} 
@@ -425,22 +424,36 @@ dynamique. Nous avons donc pu faire beaucoup de découvertes au cours de ces
 quelques semaines et décider avec plus d'assurance de notre orientation
 future.\\
 
+\newpage
 
 \section{Annexes}
 
-Ce que vous avez vu, ce sur quoi vous vous êtes formés, des choses que vous
-avez apprises (travail d'initiation à la recherche, l'évaluation devrait aussi
-comporter un paragraphe en annexe sur vos impressions, votre retour
-d'expérience).
 
+%Il faut développer la partie Définition et modélisation, explicitez
+%la notion de modèle (qui devrait arriver avant la définition de la structure
+%dans le titre. C'est ça qui implique le dev et l'utilisation de l'outil). Pour
+%moi, B et C pourraient même être une partie 3, la partie 2 devenant État de
+%l'art. Mais ça a besoin d'un peu plus de contenant, sur ce qui est mesuré, et
+%pourquoi, comment vous assemblez ensuite les résultats.
 
-Il faut développer la partie Définition et modélisation, explicitez
-la notion de modèle (qui devrait arriver avant la définition de la structure
-dans le titre. C'est ça qui implique le dev et l'utilisation de l'outil). Pour
-moi, B et C pourraient même être une partie 3, la partie 2 devenant État de
-l'art. Mais ça a besoin d'un peu plus de contenant, sur ce qui est mesuré, et
-pourquoi, comment vous assemblez ensuite les résultats.
+Les outils utilisés :
 
-implémenter = mot qui revient trop
+\begin{itemize}
+\item Github - Gestion de version
+\item Travis.cl - Intégration continue
+\item Ip-api et Telize - API de géolocalisation
+\item Execo - Gestionnaire de processus unix
+\item MongoDB - Base de données
+\item Dépendances python dans le fichier requirements.txt
+\item \LaTeX 
+\item landscape.io - mesures de qualité du code python
+\item Le café du LIP \& du Nautibus
+\end{itemize} 
+
+\newpage
+
+\begin{figure}[h] \centering
+\includegraphics[scale=0.65]{Gantt.png}
+\caption{Diagramme de Gantt} \end{figure}
 
 \end{document}
