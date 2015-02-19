@@ -150,7 +150,7 @@ ne concerne que Swift Storage et Amazon S3. Elle permet d'exécuter des tâches
 sur des outils distants et de les surveiller. Ces tâches peuvent être du test
 de performance de débits ou encore des tests de charge. Enfin, Cloudcreener est
 une solution payante que nous n’avons pas pu tester. Il semblerait qu'il
-réalise le genre d'opération que KYD est censé faire d'après leur site
+réalise le genre d'opération que \KYD est censé faire d'après leur site
 internet, cependant cet outil n'étant pas libre il ne remplit pas toutes les
 conditions de notre projet.
 
@@ -233,9 +233,9 @@ vers le système non relationnel qu'est \textit{MongoDB}. Sa vitesse de
 traitement associée aux index permet de requêter très rapidement pour fournir
 un résultat à l'utilisateur.
 
-\section{\textit{KYD} outil de "\textit{benchmark}" }
+\section{\KYD outil de "\textit{benchmark}" }
 
-\textit{KYD} est une application implémentée en langage \textit{Python}. Son
+\KYD est une application implémentée en langage \textit{Python}. Son
 développement se divise en deux parties : l'interaction avec les hébergeurs et
 l'interaction avec l'utilisateur. Nous avons donc, un système de
 \textit{benchmark} et un système de requête dans la même \textit{API}.Pour plus
@@ -266,7 +266,7 @@ terminal \textit{Unix}. L'utilisateur demande à l'application la meilleure
 solution de transfert de données selon ses paramètres et, si la base de données
 MongoDB contient des informations suffisamment similaires (zone géographique et
 taille de fichier proches), le résultat est retourné à l'utilisateur. Dans le
-cas contraire, \textit{KYD} demande à l'utilisateur s'il accepte d'effectuer un
+cas contraire, \KYD demande à l'utilisateur s'il accepte d'effectuer un
 test selon certains paramètres donnés pour enrichir la base de données et
 pouvoir répondre lors d'une prochaine requête. Pour minimiser le nombre de
 paramètres à saisir pour l'utilisateur, sa localisation géographique est
@@ -277,7 +277,7 @@ d'entre elles est hors service).\\
 
 Le schéma ci-dessous synthétise le fonctionnement de notre application dont les
 divers éléments ont été expliqués précédemment. L'utilisateur envoie ses
-paramètres à \textit{KYD} qui, dans un premier temps, le géolocalise avec
+paramètres à \KYD qui, dans un premier temps, le géolocalise avec
 \textit{ip-api} ou \textit{Telize}. Les paramètres sont ensuite utilisés pour
 requêter la base \textit{MongoDB} et renvoyés une solution si elle existe. Dans
 le cas contraire, l'application demande à l'utilisateur s'il souhaite effectuer
@@ -392,7 +392,12 @@ service \textit{Dropbox} utilise le service d'\textit{Amazon}.
 
 \section{Conclusion}
 
-Durant ce projet, nous avons donc analysé, modélisé et implmenté un outil
+Le besoin d'optimisation des méthodes de transfert se faisant de plus en plus 
+fort, il est devenu nécessaire de pouvoir sélectionner ses hébergeurs avec 
+soin. Cette thématique ouvre un large champs de possibilités dans lequel notre
+stage a trouvé sa place.\\ 
+
+Durant ce projet, nous avons donc analysé, modélisé et implementé un outil
 permettant d'estimer la meilleure solution de transfert de données entre
 plusieurs hébergeurs. Pour ce faire, une phase de recherche était nécessaire
 puisqu'il fallait vérifier qu'un tel outil n'existait pas déjà et, dans ce cas,
@@ -401,15 +406,16 @@ sélectionner les meilleures solutions "\textit{Cloud}".\\
 Les résultats obtenus suite aux tests ont permis de vérifier la validité de
 notre application. En effet, un écart trop important entre les résultats aurait
 entraîné un manque d'homogénéité des moyennes. Dans une telle situation,
-\textit{KYD} n'aurait pas pu fournir de résultat valable et nos recherches
-auraient prouvées qu'un tel outil n'était pas réalisable.\\
+\KYD n'aurait pas pu fournir de résultat valable puisque les temps 
+obtenus auraient été trop aléatoires et nos recherches auraient prouvées qu'un 
+tel outil n'était pas réalisable.\\
 
 
 Ces résultats sont donc très satisfaisants puisque le développement de
-\textit{KYD} va pouvoir se poursuivre pour proposer des solutions plus précises
+\KYD va pouvoir se poursuivre pour proposer des solutions plus précises
 sur plus d'hébergeurs. Cette application va très certainement étendre son
 champs d'action dans le monde de la recherche puisqu'une poursuite de projet
-sera normalement lancée sous peu pour améliorer \textit{KYD}.\\
+sera normalement lancée sous peu pour améliorer \KYD.\\
 
 Ce projet est donc une excellente expérience pour nous puisqu'il nous amène sur
 un domaine encore très peu exploité et prometteur. Il nous a aussi donné la
@@ -428,13 +434,13 @@ comporter un paragraphe en annexe sur vos impressions, votre retour
 d'expérience).
 
 
-\todo{YC : Il faut développer la partie Définition et modélisation, explicitez
+Il faut développer la partie Définition et modélisation, explicitez
 la notion de modèle (qui devrait arriver avant la définition de la structure
 dans le titre. C'est ça qui implique le dev et l'utilisation de l'outil). Pour
 moi, B et C pourraient même être une partie 3, la partie 2 devenant État de
 l'art. Mais ça a besoin d'un peu plus de contenant, sur ce qui est mesuré, et
-pourquoi, comment vous assemblez ensuite les résultats.}
+pourquoi, comment vous assemblez ensuite les résultats.
 
-\todo{YC :implémenter = mot qui revient trop}
+implémenter = mot qui revient trop
 
 \end{document}
