@@ -41,7 +41,7 @@ localisation géographique et des paramètres donnés, la meilleure solution
 d'hébergement \textit{Cloud} existante. De nombreux chercheurs rencontrent le
 besoin de déplacer des Téraoctets de données, cet outil leur permettra donc
 d'optimiser la migration de leurs données. À terme, ce projet Open Source
-proposera une solution unique sur le marché.\\
+proposera une solution unique sur le marché\todo{YC : pas sûr que bonne idée de parler du marché. Plus de détails sur comment l'utilisation de l'outil peut aider (problème d'ordonnancement notamment de workflow)}.\\
 
 \section{Introduction}
 
@@ -57,7 +57,7 @@ inter-cloud. Pour contribuer à l’amélioration des travaux de recherche des
 membres de l’équipe Avalon, nous avons été amenés à étudier, proposer, et
 développer un outil permettant d’évaluer la performance de transferts de
 données entre plusieurs hébergeurs de "Cloud". Cet outil permettra soit
-d’effectuer des tests de performances « à la demande », soit de récupérer les
+d’effectuer des tests de performance « à la demande », soit de récupérer les
 résultats déjà obtenus lors de précédents tests.\\
 
 
@@ -71,12 +71,12 @@ personnes ayant besoin d’évaluer les temps de transfert entre solutions
 
 \subsection{Étude de l'existant}
 
-Cette étude peut être divisée en deux parties. Tout d’abords, nous avons
+\todo{YC : avant de commencer, une sous section qui décrit ce qu'est le Cloud, et le contexte pour nous : solution de stockage ?}Cette étude peut être divisée en deux parties. Tout d’abords, nous avons
 détaillé les offres de solution de stockage “Cloud” disponibles sur le marché
-afin de pouvoir d'en dresser les caractéristiques en terme de prix et de
+afin de pouvoir en dresser les caractéristiques en terme de prix et de
 performance.  Nous avons ensuite cherché si il existait déjà un outil capable
-de réaliser des tests de performances sur des “Cloud”, l'abscence de résultats
-pouvant justifier le développement de notre
+de réaliser des tests de performances sur des “Cloud”\todo{YC : marques de citations ou pas ? Attention, clouds virtuels et non de stockage, Google développe quelque chose...}, l'abscence de résultats
+pouvant justifier\todo{YC : ça donne toujours l'impression que vous aviez vraiment bcp envie de coder, et qu'il fallait trouver un truc, n'importe quoi, qui permette de justifier le passage à l'acte...} le développement de notre
 propre application.
 
 \newpage
@@ -116,8 +116,9 @@ limitation non explicitée par l'hébergeur.\\
 
 Nous avons remarqué lors de notre analyse que l’hébergeur Dropbox utilise en
 fait les services d'Amazon S3. Dropbox étant un des services les plus
-populaires, nous avons décidé de le choisir : il apporte probablement des
-services supplémentaires. Nous pensons qu’il est également intéressant de
+populaires, nous avons décidé de le choisir
+%: il apporte probablement des services supplémentaires. Nous pensons qu’
+car il est également intéressant de
 tester les différences de performance entre Amazon S3 et Dropbox. Pour les
 mêmes raisons, il aurait également été intéressant de pouvoir vérifier les
 différences entre Google Drive et Google Cloud Storage.\\
@@ -141,7 +142,7 @@ En revanche, les espaces de stockage sont parfois assez limités.
 \textit{Cloud}}
 
 Trois projets ont été identifiés durant cette étude. Le premier, HP
-Performance, est une solution propriétaire payante. Parmi de nombreux outils,
+Performance\todo{YC : il manque des références sur les outils. Pareil pour Owncloud avant, Google Drive. Il faut une section Bibliographie, ou des foottexts avec les URLs}, est une solution propriétaire payante. Parmi de nombreux outils,
 elle propose de se placer dans une zone géographique pour provisionner un
 générateur de charges (simulation d'une utilisation intense d'un "Cloud"). Le
 second projet, COSBench, est une solution libre mais plutôt limitée puisqu’elle
@@ -149,11 +150,11 @@ ne concerne que Swift Storage et Amazon S3. Elle permet d'exécuter des tâches
 sur des outils distants et de les surveiller. Ces tâches peuvent être du test
 de performance de débits ou encore des tests de charge. Enfin, Cloudcreener est
 une solution payante que nous n’avons pas pu tester. Il semblerait qu'il
-réalise le genre d'opération que \KYD est censé faire d'après leur site
+réalise le genre d'opérations que \KYD est censé faire d'après leur site
 internet, cependant cet outil n'étant pas libre il ne remplit pas toutes les
 conditions de notre projet.
 
-Nous les avons comparés à notre projet baptisé \KYD (Know Your Data).
+Nous les avons comparés à notre projet baptisé \KYD (Know Your Data).\todo{YC : cette phrase doit explictement introduire le tableau auquel vous ne faîtes toujours pas référence. Vérifiez pour les autres tableaux, et référence dans le texte, voire explication de ce qu'on y trouve}
 
 
 \begin{table}[h] \caption{Tableau comparatif des solutions trouvées}
@@ -188,7 +189,7 @@ unique.
 Un grand nombre de paramètre est à prendre en compte pour obtenir des résultats
 cohérents et réutilisables. Il faut connaître la taille d'un fichier transféré
 ou le fichier lui-même, l'emplacement géographique de l'utilisateur (de bout en
-bout), la date du test, les hébergeurs à tester, ainsi que le type de transfert
+bout\todo{YC : utilisez vos propres termes. Ajoutez de bout en bout tel quel n'a pas vraiment de sens. On s'intéresse où sont le client et le serveur, soit aux bouts des communications, pas où se trouve l'utilisateur..}), la date du test, les hébergeurs à tester, ainsi que le type de transfert
 (\textit{upload} ou \textit{download}) pour sauvegarder les résultats avec
 précision. En retour, l'application propose une liste des différents hébergeurs
 testés avec les temps obtenus, le meilleur choix étant mis en valeur. Tous les
@@ -200,7 +201,7 @@ lors de tests ultérieurs.
 
 Le fait de travailler avec beaucoup de paramètres différents impose de pouvoir
 tester toutes les solutions possibles de manière exhaustive. Il faut également
-pouvoir stocker ces dernières de la façon la plus adapté possible pour pouvoir
+pouvoir stocker ces dernières de la façon la plus adaptée possible pour pouvoir
 les retrouver facilement. Deux outils ont donc été retenus : \textit{Execo
 Engine} et \textit{MongoDB}.
 
@@ -210,7 +211,7 @@ Engine} et \textit{MongoDB}.
 Jonathan Rouzaud-Cornabas, Adrien Lèbre et Takahiro Hirofuchi qui sont des
 chercheurs affiliés au LIP (Laboratoire de l'Informatique du Parallélisme)  de
 Lyon ayant de multiples fonctionnalités dans le but de réaliser des expériences
-reproductibles sur des système distribués, d'automatiser des tâches
+reproductibles sur des systèmes distribués, d'automatiser des tâches
 administrateur et de créer des expériences reproductibles. Dans notre cas,
 seule la partie \textit{Engine} de \textit{Execo} est intéressante puisqu'elle
 permet de réaliser le produit cartésiens des paramètres pour générer l'ensemble
@@ -237,8 +238,8 @@ un résultat à l'utilisateur.
 \KYD est une application implémentée en langage \textit{Python}. Son
 développement se divise en deux parties : l'interaction avec les hébergeurs et
 l'interaction avec l'utilisateur. Nous avons donc, un système de
-\textit{benchmark} et un système de requête dans la même \textit{API}.Pour plus
-d'efficacité, nous avons implémenté ensemble toutes les parties sur
+\textit{benchmark} et un système de requête dans la même \textit{API}. Pour plus
+d'efficacité, nous avons implémenté ensemble toutes les parties concernant
 \textit{Dropbox} puis nous nous sommes partagés le travail sur \textit{Amazon
 S3} et \textit{Google Drive}.
 
@@ -252,7 +253,7 @@ unitaires pour vérifier le fonctionnement du transfert de fichiers en
 
 Cette partie du code se veut très modulaire puisqu'elle doit permettre l'ajout
 d'autres hébergeurs. Pour faciliter ces ajouts, nous avons créé une classe par
-hébergeur (il suffit donc d'implémenter les fonctions désirée pour effectuer un
+hébergeur (il suffit donc d'implémenter les fonctions désirées pour effectuer un
 ajout). Nous avons rencontré quelques difficultés durant cette étape puisqu'une
 telle implémentation demande de s'adapter à l'utilisation de chaque SDK. Malgré
 tout, les hébergeurs sélectionnés étant très populaires, ils disposent d'une
@@ -278,7 +279,7 @@ Le schéma ci-dessous synthétise le fonctionnement de notre application dont le
 divers éléments ont été expliqués précédemment. L'utilisateur envoie ses
 paramètres à \KYD qui, dans un premier temps, le géolocalise avec
 \textit{ip-api} ou \textit{Telize}. Les paramètres sont ensuite utilisés pour
-requêter la base \textit{MongoDB} et renvoyés une solution si elle existe. Dans
+requêter la base \textit{MongoDB} et renvoyés une solution\todo{YC : phrase bizarre} si elle existe. Dans
 le cas contraire, l'application demande à l'utilisateur s'il souhaite effectuer
 les tests. S'il accepte, Execo Engine démarre les tests en contactant un à un
 les hébergeurs et, une fois terminé, les résultats sont enregistrés dans la
@@ -288,12 +289,13 @@ base de données \textit{MongoDB} et envoyés à l'utilisateur.
 \caption{Architecture de l'application} \label{fig:Architecture de
 l'application} \end{figure}
 
+\todo{YC : le shéma est vraiment trop gros vu la simplicité de ses composants.}
 \subsection{Améliorations}
 
 À terme, plusieurs améliorations sont envisageables. Ajouter des paramètres
 pour augmenter la précision des tests ferait partie de ces améliorations. Il
-serait par exemple possible de vérifier l'efficacité des compte premium qui
-apportent peut être de meilleures performances. Il faudrait également compléter
+serait par exemple possible de vérifier l'efficacité des comptes premium qui
+apportent peut-être de meilleures performances. Il faudrait également compléter
 la base de données pour pouvoir répondre le plus souvent possible à
 l'utilisateur sans avoir à lui faire effectuer des tests parfois coûteux en
 temps. Il serait alors nécessaire d'effectuer des tests à plusieurs
@@ -306,7 +308,7 @@ renseignements supplémentaires à l'utilisateur. Notre application n'est pas
 encore destinée à des utilisateurs novices (utilisation d'un système
 \textit{Unix} et uniquement en terminal), une interface web pourrait la rendre
 plus ergonomique. Enfin il serait intéressant que nos résultats, bien que
-stockés dans une base de données, soient plus facile d'accès.
+stockés dans une base de données, soient plus facile d'accès\todo{YC : cad ?}.
 
 
 \newpage \section{Analyse des résultats}
@@ -325,7 +327,7 @@ ont tous été réalisés avec les \textit{SDK} de chaque "\textit{Cloud}".\\
 Pour les figures 1 et 2, les tests ont été réalisés depuis le campus de la Doua
 à Lyon 1. Quinze tests ont été effectués en \textit{upload} et en
 \textit{download} avec une taille de fichier différente puis la moyenne de ces
-tests a permis d'obtenir ces résultats.
+tests a permis d'obtenir ces résultats\todo{YC : si vous avez des écarts-types, ça peut être bien d'en parler, par rapport à la reproductibilité à un instant donné}.
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.65]{graphe_des_downloads.png} \caption{Graphe des
@@ -349,13 +351,14 @@ crontab du serveur.
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.7]{graphe_du_15022015_pour_les_download_de_taille_10mo.png}
-\caption{Graphe des \textit{downloads} du 15 de taille 10Mo} \end{figure}
+\caption{Graphe des \textit{downloads} du 15/02/2015 de taille 10Mo} \end{figure}
 
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.7]{graphe_du_15022015_pour_les_uploads_de_10mo.png}
-\caption{Graphe des \textit{uploads} du 15 de taille 10Mo} \end{figure}
+\caption{Graphe des \textit{uploads} du 15/02/2015 de taille 10Mo} \end{figure}
 
+\todo{YC : le titre dans le png est à retirer du coup, car dans le caption}
 En "\textit{upload}", on observe qu'Amazon suit un schéma connu qui comporte
 des pics de latence à 11h, 14h puis entre 18h et 20h. On suppose que cette
 situation est due au grand nombre de connexions simultanées durant une plage
@@ -373,6 +376,7 @@ effectué les mêmes tests sur un autre jour de la semaine : le Mercredi.
 \includegraphics[scale=0.65]{graphe_des_uploads_du_18022015_de_taille_10mo.png}
 \caption{Graphe des \textit{uploads} du 15 de taille 10Mo} \end{figure}
 
+\todo{YC : heure de la journée, mieux que tranche(s) horaire (avec une faute)}
 On remarque ici l'absence d'une donnée concernant le "\textit{Cloud}"
 GoogleDrive dans la partie "\textit{download}" car il était en maintenance à 5h
 du matin. Notre outil prend en compte ce genre d'erreur et permet de continuer
@@ -387,20 +391,20 @@ qu'il rencontre quelques difficultés concernant la partie "\textit{upload}".
 que cela est probablement due à la surcouche que \textit{Dropbox} ajoute par
 rapport à \textit{S3}. En effet, comme nous vous l'avions expliqué plus tôt, le
 service \textit{Dropbox} utilise le service d'\textit{Amazon}.
-
+\todo{YC : quid des pics de latence ?}
 
 \section{Conclusion}
 
 Le besoin d'optimisation des méthodes de transfert se faisant de plus en plus 
 fort, il est devenu nécessaire de pouvoir sélectionner ses hébergeurs avec 
 soin. Cette thématique ouvre un large champs de possibilités dans lequel notre
-stage a trouvé sa place.\\ 
+stage a trouvé sa place.\todo{YC : vous ne saviez pas vraiment quoi écrire, hein ? Dites que nous sommes dans un cadre big data (grosses et/ou nombreuses), et que pour obtenir des performances, il faut minimiser le temps d'accès aux données, et donc notamment réduire les temps de transferts en choisissant une source de données proche de la destination, et que cela peut impliquer des mécanismes de préfect, de recopie/migration de données afin de disposer de plusieurs sources possibles. Reste à sélectionner la source, votre outil arrive là}\\ 
 
 Durant ce projet, nous avons donc analysé, modélisé et implementé un outil
 permettant d'estimer la meilleure solution de transfert de données entre
 plusieurs hébergeurs. Pour ce faire, une phase de recherche était nécessaire
 puisqu'il fallait vérifier qu'un tel outil n'existait pas déjà et, dans ce cas,
-sélectionner les meilleures solutions "\textit{Cloud}".\\
+sélectionner les meilleures solutions "\textit{Cloud}"\todo{YC : homogénéisez partout : cloud, ou italique ou coté. Perso, cloud tel quel est très bien}.\\
 
 Les résultats obtenus suite aux tests ont permis de vérifier la validité de
 notre application. En effet, un écart trop important entre les résultats aurait
@@ -422,7 +426,9 @@ chance de pouvoir travailler dans l'univers de la recherche qui nous était
 jusqu'alors inconnu et de collaborer avec des chercheurs dans une ambiance
 dynamique. Nous avons donc pu faire beaucoup de découvertes au cours de ces
 quelques semaines et décider avec plus d'assurance de notre orientation
-future.\\
+future\todo{YC : ça, c'est un lanceur de questions pour l'oral, avec explication de votre positionnement}.\\
+
+\todo{YC : ce qui *peut* manquer : bibliographie, avec les références des outils que vous avez utilisés. Le lien github du projet (que le projet soit public ou pas) et quelques informations sur le projet comme le nombre de lignes, etc. Une page de garde éventuellement avec le logo de l'Univ, etc., Le nom des encadrants au cas où on devienne populaire (et accessoirement car ça permet de situer le travail)}
 
 \newpage
 
