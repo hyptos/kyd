@@ -65,7 +65,7 @@ if __name__ == "__main__":
 
     fd = open('all_result_download.txt', 'w')
     for p in c.getAllAvgDownload()['result']:
-        if str(p['_id']['start_day']) == '16' and str(p['_id']['transfert']) == 'upload':
+        if str(p['_id']['start_day']) == '20' and str(p['_id']['start_hour']) >= '16' and str(p['_id']['transfert']) == 'download':
             print p
-            fd.write(p['_id']['drive'] + ' ' + str(p['_id']['start_hour']) + ' ' + str(p['AverageDuration']) + '\n')
+            fd.write(p['_id']['drive'] + ' ' + str(p['_id']['size']) + ' ' + str(p['AverageDuration']) + '\n')
     fd.close()
