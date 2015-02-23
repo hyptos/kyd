@@ -31,6 +31,7 @@ des migrations de données inter-cloud}}
 \renewcommand{\thesubsection}{\Alph{subsection}}
 \renewcommand{\thesubsubsection}{\arabic{subsubsection}}
 \newcommand{\execoE}{\textit{Execo Engine}\xspace}
+\newcommand{\ipapi}{\textit{ip-api}\xspace}
 
 \titleformat{\subsection}{\bfseries\large}{\hspace{1ex}}{1em}{\thesubsection{}
 \ }
@@ -72,7 +73,7 @@ Dans un monde toujours plus interconnecté, nos données sont de plus en plus
 dématérialisées et éparpillées. Nous sommes amenés à les transférer d’un
 hébergeur à un autre et dans le but d’optimiser ces opérations, il nous a été
 demandé de nous poser différentes questions concernant l’évaluation des
-méthodes de transfert.\\
+méthodes de transfert.
 
 Cette thématique s’inscrit dans le cadre de l’équipe
 de recherche Avalon du LIP de l’ENS de Lyon, qui propose des solutions pour la
@@ -83,7 +84,7 @@ membres de l’équipe Avalon, nous avons été amenés à étudier, proposer, e
 développer un outil permettant d’évaluer la performance de transferts de
 données entre plusieurs hébergeurs de \textit{Cloud}. Cet outil permettra soit
 d’effectuer des tests de performance « à la demande », soit de récupérer les
-résultats déjà obtenus lors de précédents tests.\\
+résultats déjà obtenus lors de précédents tests.
 
 Ce projet, nous l’espérons, pourra non seulement aider les chercheurs de
 l’équipe Avalon de l’ENS mais également offrir un outil à tous projets ou
@@ -156,11 +157,11 @@ populaires, nous avons décidé de le choisir car il est intéressant de
 tester les différences de performance entre Amazon S3 et Dropbox. Pour
 les mêmes raisons, il aurait également été intéressant de pouvoir
 vérifier les
-différences entre GoogleDrive~\cite{GoogleDrive} et Google Cloud Storage.\\
+différences entre GoogleDrive~\cite{GoogleDrive} et Google Cloud Storage.
 
 
-\todoac{J'aurai plutôt mis ce paragraphe en V Conclusion et
-  perspectives.}
+\todoac{J'aurai plutôt mis ce paragraphe en C. Perspectives.}
+
 Nous avons aussi étudié la possibilité de sélectionner OwnCloud, solution libre
 pour mettre en place un \textit{Cloud} privé, parmi les hébergeurs (mais
 l’utilisateur doit posséder une machine avec OwnCloud installé, ce qui signifie
@@ -245,7 +246,7 @@ lors de tests ultérieurs.
 Le fait de travailler avec beaucoup de paramètres différents impose de pouvoir
 tester toutes les solutions possibles de manière exhaustive. Il faut également
 pouvoir stocker ces dernières de la façon la plus adaptée possible pour pouvoir
-les retrouver facilement. Deux outils ont donc été retenus : \execoE et \textit{MongoDB}.
+les retrouver facilement. Deux outils ont donc été retenus : \execoE et \textit{MongoDB}
 
 \subsubsection{\execoE}
 
@@ -272,7 +273,7 @@ Notre application possédant une structure de données appelée à être modifi�
 régulièrement, il fallait qu'elle possède un système de gestion de base de
 données adapté. Sachant qu'une seule table serait nécessaire mais qu'elle
 contiendrait, à terme, un très grand nombre de tuples, nous nous sommes tournés
-vers le système non relationnel qu'est \textit{MongoDB}. Sa vitesse de
+vers le système non relationnel qu'est \textit{MongoDB}~\cite{MongoDB}. Sa vitesse de
 traitement associée aux index permet de requêter très rapidement pour fournir
 un résultat à l'utilisateur.
 
@@ -281,24 +282,27 @@ un résultat à l'utilisateur.
 \KYD est une application implémentée en langage \textit{Python}. Son
 développement se divise en deux parties : l'interaction avec les hébergeurs et
 l'interaction avec l'utilisateur. Nous avons donc, un système de
-\textit{benchmark} et un système de requête dans la même \textit{API}. Pour plus
+\textit{benchmark} et un système de requêtes dans la même \textit{API}. Pour plus
 d'efficacité, nous avons implémenté ensemble toutes les parties concernant
 \textit{Dropbox} puis nous nous sommes partagés le travail sur \textit{Amazon
 S3} et \textit{Google Drive}.
 
 \subsection{Interaction \textit{Cloud}}
 
-Dans un premier temps, il nous a fallu mettre en place toutes les connexions
-avec les hébergeurs sélectionnés. Nous avons utilisé les \textit{SDK} propres à
-chaque \textit{Cloud} et nous avons ensuite effectué une série de tests
-unitaires pour vérifier le fonctionnement du transfert de fichiers en
-\textit{download} et en \textit{upload}. Cette partie du code se veut très modulaire puisqu'elle doit permettre l'ajout
-d'autres hébergeurs. Pour faciliter ces ajouts, nous avons créé une classe par
-hébergeur (il suffit donc d'implémenter les fonctions désirées pour effectuer un
-ajout). Nous avons rencontré quelques difficultés durant cette étape puisqu'une
-telle implémentation demande de s'adapter à l'utilisation de chaque SDK. Malgré
-tout, les hébergeurs sélectionnés étant très populaires, ils disposent d'une
-large communauté qui permet de régler rapidement la majorité des problèmes.
+Dans un premier temps, il nous a fallu mettre en place toutes les
+connexions avec les hébergeurs sélectionnés. Nous avons utilisé les
+\textit{SDK} propres à chaque \textit{Cloud} et nous avons ensuite
+effectué une série de tests unitaires pour vérifier le fonctionnement
+du transfert de fichiers en \textit{download} et en
+\textit{upload}. Cette partie du code se veut très modulaire
+puisqu'elle doit permettre l'ajout d'autres hébergeurs. Pour faciliter
+ces ajouts, nous avons créé une classe par hébergeur (il suffit donc
+d'implémenter les fonctions désirées pour effectuer un ajout). Nous
+avons rencontré quelques difficultés durant cette étape puisqu'une
+telle implémentation demande de s'adapter à l'utilisation de chaque
+SDK. Malgré tout, les hébergeurs sélectionnés étant très populaires,
+ils disposent d'une large communauté qui permet de régler rapidement
+la majorité des problèmes.
 
 \subsection{Interaction utilisateurs}
 
@@ -312,14 +316,14 @@ test selon certains paramètres donnés pour enrichir la base de données et
 pouvoir répondre lors d'une prochaine requête. Pour minimiser le nombre de
 paramètres à saisir pour l'utilisateur, sa localisation géographique est
 automatiquement détectée grâce à son adresse IP et à deux \textit{API} de
-géolocalisation (\href{http://ip-api.com/docs/api:json}{ip-api} et
+géolocalisation (\href{http://ip-api.com/docs/api:json}{\ipapi} et
 \href{http://www.telize.com/}{Telize} qui se relaient si le serveur de l'une
-d'entre elles est hors service).\\
+d'entre elles est hors service).
 
-Le schéma ci-dessous synthétise le fonctionnement de notre application dont les
+La Figure~\ref{fig:archi} synthétise le fonctionnement de notre application dont les
 divers éléments ont été expliqués précédemment. L'utilisateur envoie ses
 paramètres à \KYD qui, dans un premier temps, le géolocalise avec
-\textit{ip-api} ou \textit{Telize}. Les paramètres sont ensuite utilisés pour
+\ipapi ou \textit{Telize}. Les paramètres sont ensuite utilisés pour
 requêter la base \textit{MongoDB} et renvoyer une solution si elle existe. Dans
 le cas contraire, l'application demande à l'utilisateur s'il souhaite effectuer
 les tests. S'il accepte, \execoE démarre les tests en contactant un à un
@@ -327,10 +331,9 @@ les hébergeurs et, une fois terminé, les résultats sont enregistrés dans la
 base de données \textit{MongoDB} et envoyés à l'utilisateur.
 
 \begin{figure}[h] \centering \includegraphics[scale=0.3]{architecture.png}
-\caption{Architecture de l'application} \label{fig:Architecture de
-l'application} \end{figure}
+\caption{Architecture de l'application} \label{fig:archi} \end{figure}
 
-\subsection{Améliorations}
+\subsection{Perspectives}
 
 À terme, plusieurs améliorations sont envisageables. Ajouter des paramètres
 pour augmenter la précision des tests ferait partie de ces améliorations. Il
@@ -341,43 +344,44 @@ l'utilisateur sans avoir à lui faire effectuer des tests parfois coûteux en
 temps. Il serait alors nécessaire d'effectuer des tests à plusieurs
 emplacements géographiques dans le monde.
 
-Enfin, une interface Web plus conviviale pourrait rapporter les résultats à
-l'utilisateur à la place de la console. Cette amélioration se veut
-majoritairement esthétique mais pourrait apporter un certain nombre de
-renseignements supplémentaires à l'utilisateur. Notre application n'est pas
-encore destinée à des utilisateurs novices (utilisation d'un système
-\textit{Unix} et uniquement en terminal), une interface Web pourrait la rendre
-plus ergonomique. Enfin il serait intéressant que nos résultats, bien que
-stockés dans une base de données, soient plus facile d'accès, en proposant par exemple une liste de résultats pré-établie.
+Enfin, une interface Web plus conviviale pourrait rapporter les
+résultats à l'utilisateur à la place de la console. Cette amélioration
+se veut majoritairement esthétique mais pourrait apporter un certain
+nombre de renseignements supplémentaires à l'utilisateur. Notre
+application est un protoype et manque encore d'interface utilisateur
+(utilisation d'un système \textit{Unix} et utilisation en ligne de
+commande uniquement), une interface Web pourrait la rendre plus
+ergonomique. Enfin il serait intéressant que nos résultats, bien que
+stockés dans une base de données, soient plus facile d'accès, en
+proposant par exemple une liste de résultats pré-formatés. 
 
+\section{Analyse des résultats}
 
-\newpage \section{Analyse des résultats}
+Suite à de nombreux tests, nous avons pu obtenir différentes courbes
+traduisant les divers aspects de notre projet. Nous désirions comparer
+les trois hébergeurs pour une localisation donnée, mais nous voulions
+aussi savoir s'il existait des différences selon le moment de la
+journée ou selon le jour de la semaine. Pour ces tests, nous avons
+réalisé un minimum de 15 tests par \textit{Cloud} et par tranche
+horaire (par exemple: 15 tests à 15h pour Amazon, GoogleDrive et
+Dropbox), les résultats ci-dessous représentent la moyenne de ces
+tests. Ils
+ont tous été réalisés avec les \textit{SDK} de chaque \textit{Cloud}.
 
-Suite à de nombreux tests, nous avons pu obtenir différentes courbes traduisant
-les divers aspects de notre projet. Nous désirions comparer les trois
-hébergeurs pour une localisation donnée, mais nous voulions aussi savoir s'il
-existait des différences selon le moment de la journée ou selon le jour de la
-semaine.\\
-
-Pour ces tests, nous avons réalisé un minimum de 15 tests par \textit{Cloud}
-et par tranche horaire (par exemple: 15 tests à 15h pour Amazon, GoogleDrive et
-Dropbox), les résultats ci-dessous représentent la moyenne de ces tests. Ils
-ont tous été réalisés avec les \textit{SDK} de chaque \textit{Cloud}.\\
-
-Pour les figures 1 et 2, les tests ont été réalisés depuis le campus de la Doua
+Pour les figures~\ref{fig:download} et~\ref{fig:upload}, les tests ont été réalisés depuis le campus de la Doua
 à Lyon 1. Quinze tests ont été effectués en \textit{upload} et en
 \textit{download} avec une taille de fichier différente puis la moyenne de ces
 tests a permis d'obtenir ces résultats.
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.65]{graphe_des_downloads.png} \caption{Graphe des
-\textit{downloads}} \end{figure}
+\textit{downloads} \label{fig:download}} \end{figure}
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.65]{graphe_des_uploads.png} \caption{Graphe des
-\textit{uploads}} \end{figure}
+\textit{uploads} \label{fig:upload}} \end{figure}
 
-On observe une faible différence entre les hébergeurs, seul \textit{Dropbox} semble moins performant mais la différence est assez légère. La différence se creuse plus sur de gros fichiers, mais reste plutôt faible sur le campus de la Doua.\\
+On observe une faible différence entre les hébergeurs, seul \textit{Dropbox} semble moins performant mais la différence est assez légère. La différence se creuse plus sur de gros fichiers, mais reste plutôt faible sur le campus de la Doua.
 
 Pour les deux figures suivantes, les tests ont été effectués depuis un serveur
 virtuel situé à Londres. Ils ont été lancés toutes les heures pendant vingt
@@ -397,10 +401,10 @@ En \textit{upload}, on observe qu'Amazon suit un schéma connu qui comporte
 des pics de latence à 11h, 14h puis entre 18h et 20h. On suppose que cette
 situation est due au grand nombre de connexions simultanées durant une plage
 horaire plus bondée que les autres. Les performances de Dropbox sont, cette
-fois encore, très nettement inférieures à celles de ses concurrents.\\
+fois encore, très nettement inférieures à celles de ses concurrents.
 
 Dans le même contexte que les deux derniers graphes situés ci-dessus, nous avons
-effectué les mêmes tests sur un autre jour de la semaine : le Mercredi.\\
+effectué les mêmes tests sur un autre jour de la semaine : le Mercredi.
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.65]{graphe_des_downloads_du_18022015_de_taille_10mo.png}
@@ -413,7 +417,7 @@ effectué les mêmes tests sur un autre jour de la semaine : le Mercredi.\\
 On remarque ici l'absence d'une donnée concernant le \textit{Cloud}
 GoogleDrive dans la partie \textit{download} car il était en maintenance à 5h
 du matin. Notre outil prend en compte ce genre d'erreur et permet de continuer
-les mesures sur les autres hébergeurs.\\
+les mesures sur les autres hébergeurs.
 
 On peut observer que l'hébergeur \textit{Amazon} et son service \textit{S3}
 reste loin devant les autres \textit{Cloud} en gardant ses moyennes
@@ -423,36 +427,49 @@ qu'il rencontre quelques difficultés concernant la partie \textit{upload}.
 \textit{Dropbox} reste bon dernier tout au long de ces tests, nous supposons
 que cela est probablement due à la surcouche que \textit{Dropbox} ajoute par
 rapport à \textit{S3}. En effet, comme nous vous l'avions expliqué plus tôt, le
-service \textit{Dropbox} utilise le service d'\textit{Amazon}.\\
+service \textit{Dropbox} utilise le service d'\textit{Amazon}.
 
-La différence entre les résultats de Lyon et ceux de Londres est assez flagrante. Le serveur d'\textit{Amazon} se trouvant en Irlande, on peut supposer que les courbes d'\textit{Amazon} s'expliquent par une plus grande proximité entre le client et le serveur. Les serveurs de \textit{Dropbox} étant partagés avec ceux d'\textit{Amazon}, on aurait pu s'attendre à une courbe similaire. Dropbox n'a donc pas forcément tous ses serveurs aux mêmes emplacements que ceux d'\textit{Amazon} (il n'en possède peut être pas en Irlande).\\
+La différence entre les résultats de Lyon et ceux de Londres est assez flagrante. Le serveur d'\textit{Amazon} se trouvant en Irlande, on peut supposer que les courbes d'\textit{Amazon} s'expliquent par une plus grande proximité entre le client et le serveur. Les serveurs de \textit{Dropbox} étant partagés avec ceux d'\textit{Amazon}, on aurait pu s'attendre à une courbe similaire. Dropbox n'a donc pas forcément tous ses serveurs aux mêmes emplacements que ceux d'\textit{Amazon} (il n'en possède peut être pas en Irlande).
 
-Nous avons calculé l'écart type pour chaque hébergeur pour les quatre derniers diagrammes pour connaître la précision de notre outil. Nous obtenons en moyenne 12\% d'écart avec 16\% pour \textit{Amazon} et 10\% pour les deux autres \textit{Cloud}, ce qui représente un résultat suffisamment précis pour rendre \KYD efficace. Le gros pourcentage d'\textit{Amazon} est fortement augmenté par la courbe des \textit{uploads} du 15/02/2015 qui présente un premier pic inexpliqué (erreurs réseau, difficultés côté serveur ?). Sans ce graphe, \textit{Amazon} propose un écart type de 8\%. Ces résultats sont donc très satisfaisants et prouvent que la précision de notre application correcte.
+Nous avons calculé l'écart type pour chaque hébergeur pour les quatre
+derniers diagrammes pour connaître la précision de notre outil. Nous
+obtenons en moyenne 12\% d'écart avec 16\% pour \textit{Amazon} et
+10\% pour les deux autres \textit{Cloud}, ce qui représente un
+résultat suffisamment précis pour rendre \KYD efficace. Le gros
+pourcentage d'\textit{Amazon} est fortement augmenté par la courbe des
+\textit{uploads} du 15/02/2015 qui présente un premier pic inexpliqué
+(erreurs réseau, difficultés côté serveur ?). Sans ce graphe,
+\textit{Amazon} propose un écart type de 8\%. Ces résultats sont donc
+très satisfaisants et prouvent que la précision de notre application
+correcte.
+
+Au delà, de l'analyse de ces expériences et des résultats propres,
+cette étude fait office de preuve de concept quant à l'outil \KYD que
+nous avons conçu et développé lors de ce projet.
 
 \section{Conclusion}
 
-
-Comme dans de nombreux centres de recherche, les chercheurs de l'ENS manipulent de grandes quantités de données parfois très volumineuses. Pour améliorer les performances de ce système, il est nécessaire de minimiser le temps d'accès aux données. Réduire les temps de transfert en choisissant une source de données proche de la destination est une solution envisageable. Il est alors nécessaire de pouvoir sélectionner la meilleure source possible pour migrer ou recopier les données en un minimum de temps.\\
+Comme dans de nombreux centres de recherche, les chercheurs de l'ENS manipulent de grandes quantités de données parfois très volumineuses. Pour améliorer les performances de ce système, il est nécessaire de minimiser le temps d'accès aux données. Réduire les temps de transfert en choisissant une source de données proche de la destination est une solution envisageable. Il est alors nécessaire de pouvoir sélectionner la meilleure source possible pour migrer ou recopier les données en un minimum de temps.
 
 Durant ce projet, nous avons donc analysé, modélisé et implémenté un outil
 permettant d'estimer la meilleure solution de transfert de données entre
 plusieurs hébergeurs. Pour ce faire, une phase de recherche était nécessaire
 puisqu'il fallait vérifier qu'un tel outil n'existait pas déjà et, dans ce cas,
-sélectionner les meilleures solutions \textit{Cloud}.\\
+sélectionner les meilleures solutions \textit{Cloud}.
 
 Les résultats obtenus suite aux tests ont permis de vérifier la validité de
 notre application. En effet, un écart trop important entre les résultats aurait
 entraîné un manque d'homogénéité des moyennes. Dans une telle situation,
 \KYD n'aurait pas pu fournir de résultat valable puisque les temps 
 obtenus auraient été trop aléatoires et nos recherches auraient prouvées qu'un 
-tel outil n'était pas réalisable.\\
+tel outil n'était pas réalisable.
 
 
 Ces résultats sont donc très satisfaisants puisque le développement de
 \KYD va pouvoir se poursuivre pour proposer des solutions plus précises
 sur plus d'hébergeurs. Cette application va très certainement étendre son
 champs d'action dans le monde de la recherche puisqu'une poursuite de projet
-sera normalement lancée sous peu pour améliorer \KYD.\\
+sera normalement lancée sous peu pour améliorer \KYD.
 
 Ce projet est donc une excellente expérience pour nous puisqu'il nous amène sur
 un domaine encore très peu exploité et prometteur. Il nous a aussi donné la
@@ -460,35 +477,43 @@ chance de pouvoir travailler dans l'univers de la recherche qui nous était
 jusqu'alors inconnu et de collaborer avec des chercheurs dans une ambiance
 dynamique. Nous avons donc pu faire beaucoup de découvertes au cours de ces
 quelques semaines et décider avec plus d'assurance de notre orientation
-future.\\
+future.
+
+\subsection*{Remerciements}
+
+Nous remerçions Laurent Pouilloux de l'équipe Avalon du LIP et
+développeur d'\execoE pour sa
+précieuse formation. 
+
+\bibliographystyle{alpha}
+\bibliography{biblio}
 
 \newpage
-
+\appendix 
 \section{Annexes}
 
-Lien du projet sur \cite{Github} : \href(https://github.com/hyptos/kyd){Github/kyd} \\
+Lien du projet sur \cite{Github} : \href{https://github.com/hyptos/kyd}{Github/kyd} \\
 
-Notre projet contient environ 2100 lignes de code avec 25 \textit{commit} par semaine en moyenne sur 33 jours.\\
+Notre projet contient environ 2100 lignes de code avec 25 \textit{commit} par semaine en moyenne sur 33 jours.
 
 Les outils utilisés :
 
 \begin{itemize}
 \item Github - Gestion de version
-\item \cite{Travis} - Intégration continue
-\item Ip-api et Telize - API de géolocalisation
-\item \cite{Execo} - Gestionnaire de processus unix
-\item \cite{MongoDB} - Base de données
+\item Travis~\cite{Travis} - Intégration continue
+\item \ipapi et Telize - API de géolocalisation
+\item \execoE~\cite{execo2013} - Gestionnaire de processus unix
+\item MongoDB~\cite{MongoDB} - Base de données
 \item Dépendances python dans le fichier requirements.txt
 \item \LaTeX 
-\item landscape.io - mesures de qualité du code python
+\item landscape.io~\cite{Landscape.io} - mesures de qualité du code python
 \item Le café du LIP \& du Nautibus
 \end{itemize} 
 
 \newpage
+\section{Diagramme de Gantt}
 
 \begin{figure}[h] \centering
-\includegraphics[scale=0.65]{Gantt.png}
+\includegraphics[scale=0.52 ]{Gantt.png}
 \caption{Diagramme de Gantt} \end{figure}
-\bibliographystyle{alpha}
-\bibliography{biblio}
 \end{document}
