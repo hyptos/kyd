@@ -1,5 +1,6 @@
 import ConfigParser
 import datetime
+import sys
 from pymongo import MongoClient
 
 
@@ -43,6 +44,40 @@ class ClientMongo(object):
         ]
 
         return self.collection.aggregate(pipeline=pipe)
+
+    def checkExpExist(self,options):
+
+        if options.driveAll:
+            drive = ['amazon', 'dropbox', 'googledrive']
+        else:
+            drive = options.drive
+
+        if len(options.transfert) == 1:
+            if options.transfert == 'updown':
+                transfert = ['download','upload']
+            else:
+                transfert = [options.transfert]
+        else:
+            transfert = ['download','upload']
+
+
+
+        pipe = [
+            {
+                '$or':[
+                    {
+                        'day':'Lundi',
+                        'city' :'Villeurbanne',
+                        'drive': {'$in': drive},
+                        'size' : options.size,
+                        'transfert':{'$in': transfert}
+                    }
+                ]
+            }
+        ]
+        print pipe
+        #sys.exit()
+        return self.collection.find(pipeline=pipe)
 
 
 # donnees de tests

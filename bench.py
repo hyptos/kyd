@@ -1,18 +1,25 @@
 #!venv/bin/python
-
+from distutils.command.check import check
 from pprint import pformat
-from bdd import ClientMongo
-from execo import Timer
-from execo_engine import Engine, sweep, ParamSweeper, slugify, logger
-
 import tempfile
 import datetime
 import sys
+
+from bdd import ClientMongo
+from execo import Timer
+from execo_engine import Engine, sweep, ParamSweeper, slugify, logger
 import os
 import providerGD
 import providerS3
 import providerDB
 import requests
+
+
+def check_in_database(options):
+    client = ClientMongo()
+    print options
+    return client.checkExpExist(options)
+
 
 
 def cb(option, a, b, parser):
@@ -74,6 +81,31 @@ def getLocalisation():
 class Bench(Engine):
     """ Bench is the engine that help running all the tests """
 
+    def check_parameters(self, options):
+        if self.options.driveAll:
+            self.drive = ['amazon', 'dropbox', 'googledrive']
+
+        self.transfert = [self.options.transfert]
+        self.OnlyDownload = False
+        if len(self.transfert) == 1:
+            if self.transfert[0] == 'download':
+                if not self.options.file:
+                    self.OnlyDownload = True
+                    print 'You must give a file with this option -t download '
+
+        if self.options.size is None and self.options.file is False:
+            print 'You have to give us a size or give us a file'
+            sys.exit()
+
+        if not self.options.drive:
+            if self.options.file:
+                print 'You choose to do all tests with this file  ' + str(self.options.file)
+            else:
+                print 'You choose to do all tests with a random file of this size ' + str(self.options.size)
+        else:
+            print 'You choose to a specific tests on ' + str(self.options.drive) + ' with ' + str(self.transfert)
+
+
     def __init__(self):
         super(Bench, self).__init__()
 
@@ -114,30 +146,15 @@ class Bench(Engine):
                                        dest='driveAll')
         self.options, self.args = self.options_parser.parse_args()
 
-        if self.options.driveAll:
-            self.drive = ['amazon', 'dropbox', 'googledrive']
+        # Check if parameters are OK
+        self.check_parameters(self.options)
 
-        self.transfert = [self.options.transfert]
-        self.OnlyDownload = False
-        if len(self.transfert) == 1:
-            if self.transfert[0] == 'download':
-                if not self.options.file:
-                    self.OnlyDownload = True
-                    print 'You must give a file with this option -t download '
+        #Check if db doest not contain the experience
+        for t in check_in_database(self.options):
+            print t
+        #temp exit should delete
+        #sys.exit()
 
-        if self.options.size is None and self.options.file is False:
-            print 'You have to give us a size or give us a file'
-            sys.exit()
-
-        if not self.options.drive:
-            if self.options.file:
-                print 'You choose to do all tests with this file  ' + str(self.options.file)
-            else:
-                print 'You choose to do all tests with a random file of this size ' + str(self.options.size)
-        else:
-            print 'You choose to a specific tests on ' + str(self.options.drive) + ' with ' + str(self.transfert)
-
-            # sys.exit()
 
     def create_file(self, size):
         """ Return the filename of file with the size of size """
@@ -146,6 +163,7 @@ class Bench(Engine):
             fout.write(os.urandom(size))
         # logger.info('Je cree '+ fname)
         return fname
+
 
     def run(self):
         """ run method from engine in order to do our workflow """
