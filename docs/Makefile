@@ -19,7 +19,7 @@ OTHER_SRC_FILES	=
 # BibTeX sources.  The bibliography will automatically be re-generated
 # if these files change.
 
-BIBTEX_SOURCES = main.bib
+BIBTEX_SOURCES = biblio.bib
 
 # xfig figures.  Will be converted to .eps and .pdf as necessary.
 
