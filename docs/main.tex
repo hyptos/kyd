@@ -67,7 +67,7 @@ est donc un outil d'aide à la décision.
 \textbf{Mots-clés} : Cloud, transfert de données, analyse de performance, modélisation de performance
 
 
-\section{Introduction}
+\section{Introduction}	
 
 Dans un monde toujours plus interconnecté, nos données sont de plus en plus
 dématérialisées et éparpillées. Nous sommes amenés à les transférer d’un
@@ -151,16 +151,11 @@ mention Oui(N/A) pour la colonne des limitations signifie une présence de
 limitation non explicitée par l'hébergeur.\\
 
 Nous avons remarqué lors de notre analyse que l’hébergeur Dropbox
-utilise en fait les services d'Amazon
-S3~\cite{S3}. Dropbox~\cite{Dropbox} étant un des services les plus
+utilise en fait les services d'Amazon S3\cite{S3}. Dropbox\cite{Dropbox} étant un des services les plus
 populaires, nous avons décidé de le choisir car il est intéressant de
 tester les différences de performance entre Amazon S3 et Dropbox. Pour
 les mêmes raisons, il aurait également été intéressant de pouvoir
-vérifier les
-différences entre GoogleDrive~\cite{GoogleDrive} et Google Cloud Storage.
-
-
-\todoac{J'aurai plutôt mis ce paragraphe en C. Perspectives.}
+vérifier les différences entre Google Drive~\cite{GoogleDrive} et Google Cloud Storage.
 
 Nous avons aussi étudié la possibilité de sélectionner OwnCloud, solution libre
 pour mettre en place un \textit{Cloud} privé, parmi les hébergeurs (mais
@@ -225,7 +220,18 @@ serveurs virtuels privés). Ce projet ne peut pas atteindre les
 hébergeurs que nous ciblons et ne constitue donc pas un concurrent à
 proprement parler. On peut aussi noter que nous avons démarré nos
 travaux de recherche le 19 Janvier 2015 et que cet outil est devenu
-public le 11 Février 2015. On peut donc souligner que l’application
+public le 11 Février 2015.
+
+
+Nous avons également découvert l'existence du projet de Idilio Drago et son équipe\cite{drago2013benchmarking},
+qui est le projet se rapprochant le plus de notre outil de \textit{Benchmark}. Cependant, ce projet se limite à l'Europe
+et ne possède actuellement que des résultats concernant l'\textit{upload} de fichiers (pas de données sur les
+\textit{downloads}). Nous sommes également plus précis dans la géolocalisation de l'utilisateur (marge d'erreur de 100Km
+contre une marge de 10Km pour nous). De plus, les objectifs de nos projets diffèrent, car nous souhaitons apporter une solution
+d'évaluation des performances tandis qu'ils souhaitent proposer un modèle fixe à notre problèmatique.
+
+
+On peut donc souligner que l’application
 que nous avons développée se situe sur un secteur en plein
 effervescence.
 
@@ -382,7 +388,7 @@ tests a permis d'obtenir ces résultats.
 \textit{uploads} \label{fig:upload}} \end{figure}
 
 On observe une faible différence entre les hébergeurs, seul \textit{Dropbox} semble moins performant mais la différence est assez légère. La différence se creuse plus sur de gros fichiers, mais reste plutôt faible sur le campus de la Doua.
-
+\newpage
 Pour les deux figures suivantes, les tests ont été effectués depuis un serveur
 virtuel situé à Londres. Ils ont été lancés toutes les heures pendant vingt
 quatre heures un dimanche avec une taille de fichier de 10Mo à l'aide de la
@@ -402,7 +408,7 @@ des pics de latence à 11h, 14h puis entre 18h et 20h. On suppose que cette
 situation est due au grand nombre de connexions simultanées durant une plage
 horaire plus bondée que les autres. Les performances de Dropbox sont, cette
 fois encore, très nettement inférieures à celles de ses concurrents.
-
+\newpage
 Dans le même contexte que les deux derniers graphes situés ci-dessus, nous avons
 effectué les mêmes tests sur un autre jour de la semaine : le Mercredi.
 
@@ -483,16 +489,15 @@ future.
 
 Nous remerçions Laurent Pouilloux de l'équipe Avalon du LIP et
 développeur d'\execoE pour sa
-précieuse formation. 
+précieuse formation.
 
-\bibliographystyle{alpha}
-\bibliography{biblio}
+
 
 \newpage
-\appendix 
 \section{Annexes}
 
-Lien du projet sur \cite{Github} : \href{https://github.com/hyptos/kyd}{Github/kyd} \\
+
+Lien du projet sur Github\cite{Github} : \href{https://github.com/hyptos/kyd}{Github/kyd} \\
 
 Notre projet contient environ 2100 lignes de code avec 25 \textit{commit} par semaine en moyenne sur 33 jours.
 
@@ -500,7 +505,7 @@ Les outils utilisés :
 
 \begin{itemize}
 \item Github - Gestion de version
-\item Travis~\cite{Travis} - Intégration continue
+\item Travis\cite{Travis} - Intégration continue
 \item \ipapi et Telize - API de géolocalisation
 \item \execoE~\cite{execo2013} - Gestionnaire de processus unix
 \item MongoDB~\cite{MongoDB} - Base de données
@@ -508,10 +513,20 @@ Les outils utilisés :
 \item \LaTeX 
 \item landscape.io~\cite{Landscape.io} - mesures de qualité du code python
 \item Le café du LIP \& du Nautibus
-\end{itemize} 
+\end{itemize}
+
+Versions des SDK utilisés :
+\begin{itemize}
+\item Amazon S3 - boto v2.35.2
+\item Dropbox - v2.2.0
+\item Google Drive - v1.3.1
+\item Execo - v2.4.3
+\end{itemize}
+
+\bibliographystyle{plain}
+\bibliography{biblio}
 
 \newpage
-\section{Diagramme de Gantt}
 
 \begin{figure}[h] \centering
 \includegraphics[scale=0.52 ]{Gantt.png}
