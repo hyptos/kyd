@@ -281,24 +281,27 @@ un résultat à l'utilisateur.
 \KYD est une application implémentée en langage \textit{Python}. Son
 développement se divise en deux parties : l'interaction avec les hébergeurs et
 l'interaction avec l'utilisateur. Nous avons donc, un système de
-\textit{benchmark} et un système de requête dans la même \textit{API}. Pour plus
+\textit{benchmark} et un système de requêtes dans la même \textit{API}. Pour plus
 d'efficacité, nous avons implémenté ensemble toutes les parties concernant
 \textit{Dropbox} puis nous nous sommes partagés le travail sur \textit{Amazon
 S3} et \textit{Google Drive}.
 
 \subsection{Interaction \textit{Cloud}}
 
-Dans un premier temps, il nous a fallu mettre en place toutes les connexions
-avec les hébergeurs sélectionnés. Nous avons utilisé les \textit{SDK} propres à
-chaque \textit{Cloud} et nous avons ensuite effectué une série de tests
-unitaires pour vérifier le fonctionnement du transfert de fichiers en
-\textit{download} et en \textit{upload}. Cette partie du code se veut très modulaire puisqu'elle doit permettre l'ajout
-d'autres hébergeurs. Pour faciliter ces ajouts, nous avons créé une classe par
-hébergeur (il suffit donc d'implémenter les fonctions désirées pour effectuer un
-ajout). Nous avons rencontré quelques difficultés durant cette étape puisqu'une
-telle implémentation demande de s'adapter à l'utilisation de chaque SDK. Malgré
-tout, les hébergeurs sélectionnés étant très populaires, ils disposent d'une
-large communauté qui permet de régler rapidement la majorité des problèmes.
+Dans un premier temps, il nous a fallu mettre en place toutes les
+connexions avec les hébergeurs sélectionnés. Nous avons utilisé les
+\textit{SDK} propres à chaque \textit{Cloud} et nous avons ensuite
+effectué une série de tests unitaires pour vérifier le fonctionnement
+du transfert de fichiers en \textit{download} et en
+\textit{upload}. Cette partie du code se veut très modulaire
+puisqu'elle doit permettre l'ajout d'autres hébergeurs. Pour faciliter
+ces ajouts, nous avons créé une classe par hébergeur (il suffit donc
+d'implémenter les fonctions désirées pour effectuer un ajout). Nous
+avons rencontré quelques difficultés durant cette étape puisqu'une
+telle implémentation demande de s'adapter à l'utilisation de chaque
+SDK. Malgré tout, les hébergeurs sélectionnés étant très populaires,
+ils disposent d'une large communauté qui permet de régler rapidement
+la majorité des problèmes.
 
 \subsection{Interaction utilisateurs}
 
