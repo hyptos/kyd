@@ -15,10 +15,13 @@ import providerDB
 import requests
 
 
-def check_in_database(options):
+def check_in_database(options,loca):
     client = ClientMongo()
-    #print options
-    return client.checkExpExist(options)
+    return client.checkExpExist(options,loca)
+
+def check_Exp_database(options,loca):
+    client = ClientMongo()
+    return client.getAvgExp(options,loca)
 
 
 
@@ -104,6 +107,7 @@ class Bench(Engine):
                 print 'You choose to do all tests with a random file of this size ' + str(self.options.size)
         else:
             print 'You choose to a specific tests on ' + str(self.options.drive) + ' with ' + str(self.transfert)
+        self.localisation = getLocalisation()
 
 
     def __init__(self):
@@ -150,10 +154,14 @@ class Bench(Engine):
         self.check_parameters(self.options)
 
         #Check if db doest not contain the experience
-        #for t in check_in_database(self.options):
-        #    print t
-        #temp exit should delete
-        #sys.exit()
+        res = check_in_database(self.options,self.localisation)
+        if res.count() > 5:
+            logger.info('There is already at least 5 experiences like the one you want')
+            response = raw_input('Would you like to get results from our database? (Y/N)')
+            if response == "Y":
+                for t in check_Exp_database(self.options,self.localisation)['result']:
+                    logger.info(t)
+                sys.exit()
 
 
     def create_file(self, size):
@@ -168,7 +176,7 @@ class Bench(Engine):
     def run(self):
         """ run method from engine in order to do our workflow """
 
-        localisation = getLocalisation()
+
         mongo = ClientMongo()
 
         size = dict
@@ -305,11 +313,11 @@ class Bench(Engine):
                                         # os.remove(comb_dir + '/' + fname.split('/')[-1])
                                 continue
                             if comb['transfert'] == "upload" or comb['transfert'] == "upDown":
-                                f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
-                                                                                localisation['lat'],
-                                                                                localisation['lon'],
-                                                                                localisation['city'],
-                                                                                localisation['country'],
+                                f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (self.localisation['ip'],
+                                                                                self.localisation['lat'],
+                                                                                self.localisation['lon'],
+                                                                                self.localisation['city'],
+                                                                                self.localisation['country'],
                                                                                 comb['drive'],
                                                                                 comb['if'],
                                                                                 timer.start_date(),
@@ -317,11 +325,11 @@ class Bench(Engine):
                                                                                 "upload",
                                                                                 up_time))
                                 mongo.collection.insert({
-                                    'ip': localisation['ip'],
-                                    'latitude': localisation['lat'],
-                                    'longitude': localisation['lon'],
-                                    'city': localisation['city'],
-                                    'country': localisation['country'],
+                                    'ip': self.localisation['ip'],
+                                    'latitude': self.localisation['lat'],
+                                    'longitude': self.localisation['lon'],
+                                    'city': self.localisation['city'],
+                                    'country': self.localisation['country'],
                                     'drive': comb['drive'],
                                     'interface': comb['if'],
                                     'start_date': start_date,
@@ -331,11 +339,11 @@ class Bench(Engine):
                                 })
 
                             if comb['transfert'] == "download" or comb['transfert'] == "upDown":
-                                f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (localisation['ip'],
-                                                                                localisation['lat'],
-                                                                                localisation['lon'],
-                                                                                localisation['city'],
-                                                                                localisation['country'],
+                                f.write("%s %s %s %s %s %s %s %f %i %s %f\n" % (self.localisation['ip'],
+                                                                                self.localisation['lat'],
+                                                                                self.localisation['lon'],
+                                                                                self.localisation['city'],
+                                                                                self.localisation['country'],
                                                                                 comb['drive'],
                                                                                 comb['if'],
                                                                                 timer.start_date(),
@@ -343,11 +351,11 @@ class Bench(Engine):
                                                                                 "download",
                                                                                 dl_time))
                                 mongo.collection.insert({
-                                    'ip': localisation['ip'],
-                                    'latitude': localisation['lat'],
-                                    'longitude': localisation['lon'],
-                                    'city': localisation['city'],
-                                    'country': localisation['country'],
+                                    'ip': self.localisation['ip'],
+                                    'latitude': self.localisation['lat'],
+                                    'longitude': self.localisation['lon'],
+                                    'city': self.localisation['city'],
+                                    'country': self.localisation['country'],
                                     'drive': comb['drive'],
                                     'interface': comb['if'],
                                     'start_date': start_date,

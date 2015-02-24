@@ -45,7 +45,54 @@ class ClientMongo(object):
 
         return self.collection.aggregate(pipeline=pipe)
 
-    def checkExpExist(self,options):
+    def getAvgExp(self,options,loca):
+        if options.driveAll:
+            drive = ['amazon', 'dropbox', 'googledrive']
+        else:
+            drive = options.drive
+
+        if len(options.transfert) == 1:
+            if options.transfert == 'updown':
+                transfert = ['download','upload']
+            else:
+                transfert = [options.transfert]
+        else:
+            transfert = ['download','upload']
+
+        pipe = [
+            {
+                '$match':
+                {
+                    'city' : loca['city'],
+                    'country' : loca['country'],
+                    'drive': {'$in': drive},
+                    'size' : {'$gt': options.size*0.90, '$lt': options.size*1.10},
+                    'transfert':{'$in': transfert}
+                }
+            },
+            {
+                '$group':
+                {
+                    '_id':
+                        {
+                            'drive': "$drive",
+                            'transfert': "$transfert",
+                            'size': "$size",
+                        },
+                    'AverageDuration': {'$avg': '$time'},
+                    'count': {'$sum': 1}
+                }
+            },
+            {
+                '$sort': {
+                    'AverageDuration': 1
+                }
+            }
+        ]
+
+        return self.collection.aggregate(pipeline=pipe)
+
+    def checkExpExist(self,options,loca):
 
         if options.driveAll:
             drive = ['amazon', 'dropbox', 'googledrive']
@@ -62,22 +109,20 @@ class ClientMongo(object):
 
 
 
-        pipe = [
+        pipe = dict(
             {
                 '$or':[
                     {
-                        'day':'Lundi',
-                        'city' :'Villeurbanne',
+                        'city' : loca['city'],
+                        'country' : loca['country'],
                         'drive': {'$in': drive},
                         'size' : options.size,
                         'transfert':{'$in': transfert}
                     }
                 ]
             }
-        ]
-        print pipe
-        #sys.exit()
-        return self.collection.find(pipeline=pipe)
+        )
+        return self.collection.find(spec=pipe)
 
 
 # donnees de tests
