@@ -17,7 +17,7 @@ import requests
 
 def check_in_database(options):
     client = ClientMongo()
-    print options
+    #print options
     return client.checkExpExist(options)
 
 
@@ -150,8 +150,8 @@ class Bench(Engine):
         self.check_parameters(self.options)
 
         #Check if db doest not contain the experience
-        for t in check_in_database(self.options):
-            print t
+        #for t in check_in_database(self.options):
+        #    print t
         #temp exit should delete
         #sys.exit()
 
