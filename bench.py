@@ -210,7 +210,7 @@ class Bench(Engine):
 
         for n in range(0, int(self.options.ntest), 1):
             logger.info('---------------------')
-            logger.info('Round %i', n)
+            logger.info('Round %i', n+1)
             combs = sweep(parameters)
             date = datetime.datetime.now().strftime("%Y-%m-%d_%H-%M-%S")
             pathResults = os.getcwd() + '/Results/Bench' + date
@@ -373,6 +373,9 @@ class Bench(Engine):
             f.close()
         # delete the Bench Folder
         os.rmdir(self.result_dir)
+        logger.info("---------------------------------------")
+        for t in check_Exp_database(self.options,self.localisation)['result']:
+            logger.info(t)
 
 
 if __name__ == "__main__":
